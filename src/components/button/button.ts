@@ -11,13 +11,11 @@ export type Button = {
 };
 
 export function createButton(
-	contentOrButton: string | HTMLElement | HTMLElement[],
+	content: string | HTMLElement | HTMLElement[],
 	onClickCallback: (e: any) => void,
 	type: ButtonType,
 ): HTMLElement {
-	const buttonContent = typeof contentOrButton === "string" ? contentOrButton : "";
-
-	const button = el("button." + type, buttonContent) as HTMLButtonElement;
+	const button = el("button." + type, content) as HTMLButtonElement;
 	button.onclick = (e) => {
 		playSound(sounds.tap);
 		onClickCallback(e);

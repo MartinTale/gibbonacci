@@ -2,7 +2,7 @@ import { updateFireflyColor } from "../components/fireflies/fireflies";
 
 type RGB = { r: number; g: number; b: number };
 
-export const colors = ["#D1D5D8", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#E25041"];
+export const colors = ["#a87141", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#E25041", "#a87141"];
 
 // const colorsPerIndex = 20;
 // let colorIndex = 0;
@@ -10,9 +10,17 @@ export const colors = ["#D1D5D8", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#
 // 	colorIndex++;
 
 // 	const realColorIndex = Math.min(colors.length - 1, Math.floor(colorIndex / colorsPerIndex));
-// 	const color = getColorFromRange(hexToRgb(colors[realColorIndex]), hexToRgb(colors[Math.min(colors.length - 1, realColorIndex + 1)]), (colorIndex % colorsPerIndex) / colorsPerIndex);
+// 	const color = getColorFromRange(
+// 		hexToRgb(colors[realColorIndex]),
+// 		hexToRgb(colors[Math.min(colors.length - 1, realColorIndex + 1)]),
+// 		(colorIndex % colorsPerIndex) / colorsPerIndex,
+// 	);
 
 // 	setGameColor(rgbToHex(color.r, color.g, color.b));
+
+// 	if (realColorIndex === colors.length - 1) {
+// 		colorIndex = 0;
+// 	}
 // }, 100);
 
 export function setGameColor(newHexColor: string) {

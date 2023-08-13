@@ -26,10 +26,10 @@ export function tween(target: HTMLElement, props: TweenProperties) {
 	target.style.pointerEvents = "none";
 
 	const onComplete = () => {
-		props.onComplete?.();
+		delete tweens[id];
 		target.style.transition = "";
 		target.style.pointerEvents = "";
-		delete tweens[id];
+		props.onComplete?.();
 	};
 
 	const startTime = Date.now();

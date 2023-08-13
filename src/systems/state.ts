@@ -1,17 +1,22 @@
 const STATE_KEY = "js13kgames-template";
 
 export type Path = "sound" | "screen";
+export type Hero = "swordsman" | "knight" | "archer";
 
 export type State = {
 	lastProcessedAt: number;
 	sound: boolean | null;
 	level: number;
+
+	activeHero: Hero;
 };
 
 export const emptyState: State = {
 	lastProcessedAt: Date.now(),
 	sound: null,
 	level: 0,
+
+	activeHero: "swordsman",
 };
 
 export let state: State;

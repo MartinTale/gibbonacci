@@ -1,7 +1,7 @@
 import "./reset.css";
 import "./defaults.css";
 import { initMusic } from "./systems/music";
-import { el, mount, setTextContent } from "./helpers/dom";
+import { el, mount, setTextContent, svgEl } from "./helpers/dom";
 import { initState, resetState } from "./systems/state";
 import { SVGs } from "./systems/svgs";
 import { abbreviateNumber, random } from "./helpers/numbers";
@@ -13,6 +13,8 @@ import { DataKey, addBinding, getters, setters } from "./systems/bind";
 import { easings, tween } from "./systems/animation";
 import { ProgressBar } from "./components/progress-bar/progress-bar";
 import { colors, setGameColor } from "./helpers/colors";
+import { closeModal, openModal } from "./components/modal/modal";
+import { heroContainer, initHero } from "./game/hero/hero";
 
 export let bodyElement: HTMLElement;
 export let gameContainer: HTMLElement;
@@ -46,12 +48,34 @@ window.addEventListener("DOMContentLoaded", () => {
 	if (import.meta.env.MODE === "development") {
 		new EdgeLinkButton(
 			bodyElement,
-			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m1.6 11.4-1.5-1 5.4-.6 1.9 5-1.5-1c-1.5 2.4-2.9 5.2-2 8C1.4 19.5 0 18 0 16c0-1.4 1-3.3 1.6-4.6zm4 5.6c-.7 1-1 2.9-.7 4 .1.6.6 1 1.2 1H11v-5H5.7zm10.8 5.2V24L13 19.7l3.4-4.2v1.8c2.8 0 5.8-.4 7.6-2.5-.5 3.2-1.1 5.3-2.8 6.3-1.2.8-3.4 1-4.8 1zm2.7-6.4a6 6 0 0 0 3.8-1.5c.4-.4.5-1 .2-1.5l-2.6-4.2-4.3 2.6 2.8 4.6zM18 4.2l1.6-.9-2 5-5.4-.7 1.6-.9c-1.4-2.4-3.2-5-6-5.6C10 .4 11.5 0 12.8 0c2.2 0 3.5 1.3 5.4 4.2zm-6.9.8c-.4-1.1-2-2.3-3.2-2.6-.5-.2-1 0-1.3.5L4.3 7.2l4.3 2.4L11.2 5z"/></svg>`,
+			`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M255 34.8c-30.5-.2-59 22-79.6 62.1l-.2.4L43 326.8l-.3.3c-24.3 38.3-29.4 74.4-14.3 101 15 26.4 48.6 40 93.5 37.8h265c45 2.3 78.5-11.4 93.6-37.9 15-26.5 10-62.6-14.4-100.8l-.2-.4L335.3 98l-.2-.4c-21-40.2-49.6-62.8-80.1-63zm0 18.8c13.6.1 26.5 7 38.2 18.3a189.8 189.8 0 0 1 33.4 48.4l.1.3L442 322.2v.1l.2.3a183 183 0 0 1 25.3 54c3.9 16 3 30.6-3.9 42.3-6.9 11.8-19.2 19.6-34.8 24a182 182 0 0 1-57.4 4.4H137.6a179 179 0 0 1-60.4-5c-15.8-5-27.7-13.5-33.7-25.8-6-12.2-5.9-26.8-1.5-42.4a198.6 198.6 0 0 1 24.9-51.5l.2-.4L183.6 120l.2-.4a183 183 0 0 1 33-48.2c11.7-11.3 24.7-18 38.2-17.8zm47.7 62-28.5 224.1h-41.9l-27.9-219.2a293 293 0 0 0-4.2 8v.2l-.2.2L83 332v.2l-.2.1a184 184 0 0 0-22.8 47c-3.6 12.8-3.1 22.2.3 29 3.3 6.9 9.9 12.3 22.4 16.2a167 167 0 0 0 54.4 4.3H372c21.9 1.1 39.3-.3 52-3.8 12.5-3.6 19.7-8.9 23.6-15.4 3.9-6.6 5-15.6 1.8-28.5-3.2-13-10.7-29.4-23-48.8l-.2-.1-.1-.3-115.7-202.2v-.2l-.1-.2c-2.5-4.8-5-9.3-7.5-13.5zM231.3 362h43.9v43.9h-44v-44z"/></svg>`,
 			"#f00",
 			-8,
 			-8,
 			() => {
-				resetState();
+				openModal(
+					gameContainer,
+					"HARD RESET",
+					"This will delete all progress!",
+					[
+						{
+							content: "Cancel",
+							type: "normal",
+							onClickCallback: () => {
+								closeModal();
+							},
+						},
+						{
+							content: "Reset",
+							type: "danger",
+							onClickCallback: () => {
+								resetState();
+								closeModal();
+							},
+						},
+					],
+					null,
+				);
 			},
 		);
 	}
@@ -99,6 +123,39 @@ window.addEventListener("DOMContentLoaded", () => {
 	addBinding(DataKey.level, (level: number) => {
 		setTextContent(testButton2, `Test ${abbreviateNumber(level * 80)}`);
 	});
+
+	initHero();
+	mount(gameContainer, heroContainer);
+
+	const swordsmanButton = createButton(
+		svgEl(SVGs.swordsman, "#fff"),
+		() => {
+			setters[DataKey.activeHero]("swordsman");
+		},
+		"primary",
+	);
+	swordsmanButton.classList.add("hero-nav");
+	mount(gameContainer, swordsmanButton);
+
+	const archerButton = createButton(
+		svgEl(SVGs.archer, "#fff"),
+		() => {
+			setters[DataKey.activeHero]("archer");
+		},
+		"primary",
+	);
+	archerButton.classList.add("hero-nav");
+	mount(gameContainer, archerButton);
+
+	const knightButton = createButton(
+		svgEl(SVGs["mounted-knight"], "#fff"),
+		() => {
+			setters[DataKey.activeHero]("knight");
+		},
+		"primary",
+	);
+	knightButton.classList.add("hero-nav");
+	mount(gameContainer, knightButton);
 
 	initGame();
 	startGameLoop();
