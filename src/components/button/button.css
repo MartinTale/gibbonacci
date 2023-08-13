@@ -1,0 +1,29 @@
+button {
+	margin: 0 0.5rem;
+	border: 1px solid var(--color);
+	background-color: var(--bg);
+	padding: 10px 20px;
+	font-size: 16px;
+	font-weight: bold;
+	border-radius: 4px;
+	color: var(--color);
+	cursor: pointer;
+}
+
+button:hover {
+	transform: scale(1.075);
+}
+
+button.disabled {
+	pointer-events: none;
+	opacity: 0.25;
+}
+
+button.danger {
+	filter: hue-rotate(90deg);
+}
+
+button.normal {
+	color: #fff;
+	border-color: #fff;
+}

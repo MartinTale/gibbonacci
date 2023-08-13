@@ -1,0 +1,89 @@
+:root {
+	--bg: #03182b;
+	--color: #8be9ff;
+	--shadow: #4f838f;
+}
+
+body,
+body * {
+	text-shadow: 0 0 3px #000;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+html,
+body {
+	width: 100vw;
+	min-width: 100vw;
+	max-width: 100vw;
+	height: 100vh;
+	min-height: 100vh;
+	max-height: 100vh;
+	margin: 0;
+	padding: 0;
+	overscroll-behavior-y: none;
+}
+
+body {
+	align-items: flex-end;
+	color: #ccc;
+	font-size: 24px;
+	background: var(--bg);
+}
+
+small {
+	width: 100%;
+	display: block;
+	line-height: 1;
+	font-size: 0.75rem;
+	text-align: right;
+}
+
+h1 {
+	margin: 0;
+	font-size: 32px;
+	width: 100%;
+	color: #fff;
+}
+
+a {
+	text-decoration: underline;
+	color: var(--color);
+	font-weight: bold;
+	cursor: pointer;
+}
+
+hr {
+	width: 100%;
+	border-color: #333;
+	margin: 16px 0;
+}
+
+p {
+	margin-bottom: 8px;
+}
+
+b {
+	color: #fff;
+	margin-bottom: 8px;
+}
+
+ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	text-align: center;
+}
+
+div {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+svg {
+	filter: drop-shadow(0 0 5px #000);
+}
