@@ -1,8 +1,10 @@
 import { js13kViteConfig } from "js13k-vite-plugins";
 import { defineConfig } from "vite";
 
-export default defineConfig(
-	js13kViteConfig({
+// @ts-ignore
+export default defineConfig((configEnv) => {
+	return js13kViteConfig({
 		closureOptions: false,
-	}),
-);
+		// roadrollerOptions: configEnv.mode === "development" ? false : undefined,
+	});
+});
