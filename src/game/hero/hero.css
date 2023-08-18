@@ -1,7 +1,9 @@
 .hero {
 	width: 100px;
 	height: 100px;
-	position: relative;
+	position: absolute;
+	left: 10px;
+	bottom: 0;
 }
 
 .hero * {

@@ -18,7 +18,7 @@ function processGameState() {
 	Object.values(tweens).forEach((updateTween) => updateTween(newProcessingTime));
 	// console.log(secondsPassed);
 
-	setters[DataKey.level](getters[DataKey.level]() + secondsPassed);
+	// setters[DataKey.level](getters[DataKey.level]() + secondsPassed);
 
 	state.lastProcessedAt = newProcessingTime;
 	requestAnimationFrame(processGameState);

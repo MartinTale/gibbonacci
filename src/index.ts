@@ -1,20 +1,17 @@
 import "./reset.css";
 import "./defaults.css";
 import { initMusic } from "./systems/music";
-import { el, mount, setTextContent, svgEl } from "./helpers/dom";
+import { el, mount, svgEl } from "./helpers/dom";
 import { initState, resetState } from "./systems/state";
 import { SVGs } from "./systems/svgs";
-import { abbreviateNumber, random } from "./helpers/numbers";
 import { initFireflies } from "./components/fireflies/fireflies";
 import { EdgeLinkButton, EdgeButton } from "./components/edge-button/edge-button";
 import { initGame, startGameLoop } from "./game/game";
 import { createButton } from "./components/button/button";
-import { DataKey, addBinding, getters, setters } from "./systems/bind";
-import { easings, tween } from "./systems/animation";
-import { ProgressBar } from "./components/progress-bar/progress-bar";
+import { DataKey, getters, setters } from "./systems/bind";
 import { colors, setGameColor } from "./helpers/colors";
 import { closeModal, openModal } from "./components/modal/modal";
-import { heroContainer, initHero } from "./game/hero/hero";
+import { battleContainer, initBattle } from "./game/battle/battle";
 
 export let bodyElement: HTMLElement;
 export let gameContainer: HTMLElement;
@@ -73,57 +70,45 @@ window.addEventListener("DOMContentLoaded", () => {
 		);
 	}
 
-	const testButton = createButton(
-		"",
-		() => {
-			setters[DataKey.level](getters[DataKey.level]() + 1);
-			tween(testButton, {
-				to: {
-					x: random(-200, 200),
-					y: random(-100, 300),
-					rotate: random(-180, 180),
-					scale: random(5, 20) / 10,
-					opacity: random(20, 100) / 100,
-				},
-				duration: 1000,
-				easing: easings.swingTo,
-			});
-		},
-		"primary",
-	);
+	// const testButton = createButton(
+	// 	"",
+	// 	() => {
+	// 		setters[DataKey.level](getters[DataKey.level]() + 1);
+	// 		tween(testButton, {
+	// 			to: {
+	// 				x: random(-200, 200),
+	// 				y: random(-100, 300),
+	// 				rotate: random(-180, 180),
+	// 				scale: random(5, 20) / 10,
+	// 				opacity: random(20, 100) / 100,
+	// 			},
+	// 			duration: 1000,
+	// 			easing: easings.swingTo,
+	// 		});
+	// 	},
+	// 	"primary",
+	// );
 
-	mount(gameContainer, testButton);
+	// mount(gameContainer, testButton);
 
-	const testButton2 = createButton(
-		"",
-		() => {
-			setters[DataKey.level](getters[DataKey.level]() + 1);
-		},
-		"primary",
-	);
+	// const testButton2 = createButton(
+	// 	"",
+	// 	() => {
+	// 		setters[DataKey.level](getters[DataKey.level]() + 1);
+	// 	},
+	// 	"primary",
+	// );
 
-	mount(gameContainer, testButton2);
+	// mount(gameContainer, testButton2);
 
-	const bar = new ProgressBar(gameContainer, 0, 100, 0);
-	bar.container.style.margin = "10px";
-	bar.container.onclick = () => {
-		bar.setValue(bar.value + 10);
-	};
-
-	addBinding(DataKey.level, (level: number) => {
-		setTextContent(testButton, `Test ${abbreviateNumber(level)}`);
-	});
-	addBinding(DataKey.level, (level: number) => {
-		setTextContent(testButton2, `Test ${abbreviateNumber(level * 80)}`);
-	});
-
-	initHero();
-	mount(gameContainer, heroContainer);
+	initBattle();
+	mount(gameContainer, battleContainer);
 
 	const swordsmanButton = createButton(
 		svgEl(SVGs.swordsman, "#fff"),
 		() => {
-			setters[DataKey.activeHero]("swordsman");
+			setters[DataKey.activeHero](0);
+			setters[DataKey.level](getters[DataKey.level]() + 1);
 		},
 		"primary",
 	);
@@ -133,7 +118,8 @@ window.addEventListener("DOMContentLoaded", () => {
 	const archerButton = createButton(
 		svgEl(SVGs.archer, "#fff"),
 		() => {
-			setters[DataKey.activeHero]("archer");
+			setters[DataKey.activeHero](1);
+			setters[DataKey.level](getters[DataKey.level]() + 1);
 		},
 		"primary",
 	);
@@ -143,7 +129,8 @@ window.addEventListener("DOMContentLoaded", () => {
 	const knightButton = createButton(
 		svgEl(SVGs["mounted-knight"], "#fff"),
 		() => {
-			setters[DataKey.activeHero]("knight");
+			setters[DataKey.activeHero](2);
+			setters[DataKey.level](getters[DataKey.level]() + 1);
 		},
 		"primary",
 	);
