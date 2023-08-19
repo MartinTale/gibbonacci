@@ -2,7 +2,7 @@ import { gameContainer } from "..";
 import { createButton } from "../components/button/button";
 import { ProgressBar } from "../components/progress-bar/progress-bar";
 import { el, mount, setTextContent, svgEl } from "../helpers/dom";
-import { abbreviateNumber } from "../helpers/numbers";
+import { abbreviateNumber, random } from "../helpers/numbers";
 import { easings, explode, tween, tweens } from "../systems/animation";
 import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
@@ -33,11 +33,45 @@ export function initGame() {
 				state.nextFibonacciNumber = getNextFibonacciNumber();
 				progress.setValue(state.numbersFound.length);
 
-				explode(160, 600, svgEl(SVGs.banana, "var(--color)"), 5);
-				explode(160, 600, svgEl(SVGs["banana-peeled"], "var(--color)"), 5);
-				explode(160, 600, svgEl(SVGs["banana-bunch"], "var(--color)"), 5);
+				explode(
+					[
+						svgEl(SVGs.banana, "var(--color)"),
+						svgEl(SVGs["banana-peeled"], "var(--color)"),
+						svgEl(SVGs["banana-bunch"], "var(--color)"),
+					],
+					{
+						x: () => 160,
+						y: () => 600,
+						scale: () => 1,
+						rotate: () => 0,
+					},
+					{
+						x: () => random(-150, 150),
+						y: () => random(-550, 50),
+						scale: () => random(5, 20) / 10,
+						rotate: () => random(-360, 360),
+					},
+					10,
+					2000,
+				);
 			} else {
-				explode(160, 680, el("span.question", "?"), 2);
+				explode(
+					getMathSymbolElements(),
+					{
+						x: () => 160,
+						y: () => 680,
+						scale: () => 1,
+						rotate: () => 0,
+					},
+					{
+						x: () => random(-150, 150),
+						y: () => random(-150, 20),
+						scale: () => random(10, 20) / 10,
+						rotate: () => random(-45, 45),
+					},
+					5,
+					1000,
+				);
 			}
 
 			state.numbersChecked += 1;
@@ -101,16 +135,16 @@ function addNumberFound(number: number) {
 			scale: 1,
 		},
 		to: {
-			y: 340,
-			scale: 2,
+			y: 300,
+			scale: 3,
 		},
 		duration: 250,
 		easing: easings.easeOutExpo,
 		onComplete: () => {
 			tween(numberFoundElement, {
 				from: {
-					y: 340,
-					scale: 2,
+					y: 300,
+					scale: 3,
 				},
 				to: {
 					y: 0,
@@ -147,4 +181,45 @@ function getNextFibonacciNumber() {
 	}
 
 	return state.numbersFound[state.numbersFound.length - 1] + state.numbersFound[state.numbersFound.length - 2];
+}
+
+// https://www.calculators.org/math/html-math.php
+const mathSymbols = [
+	"?",
+	"+",
+	"-",
+	"×",
+	"÷",
+	"=",
+	"≠",
+	"±",
+	"<",
+	">",
+	"ƒ",
+	"%",
+	"∃",
+	"∅",
+	"∏",
+	"∑",
+	"√",
+	"∛",
+	"∜",
+	"∞",
+	"⊾",
+	"⊿",
+	"⋈",
+	"Δ",
+	"Θ",
+	"Λ",
+	"Φ",
+	"Ψ",
+	"Ω",
+	"α",
+	"β",
+	"γ",
+	"δ",
+	"λ",
+];
+function getMathSymbolElements() {
+	return mathSymbols.map((symbol) => el("span.math-symbol", symbol));
 }

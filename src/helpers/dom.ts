@@ -20,7 +20,6 @@ export function el(tagAndClasses: string, content: null | string | HTMLElement |
 }
 
 export function mount(container: HTMLElement, element: HTMLElement) {
-	console.log(container, element);
 	container.insertAdjacentElement("beforeend", element);
 }
 

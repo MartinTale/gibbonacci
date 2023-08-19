@@ -308,42 +308,78 @@ export const easings = {
 	},
 };
 
-export function explode(x: number, y: number, element: HTMLElement, amount = 10) {
+export function explode(
+	element: HTMLElement | HTMLElement[],
+	from: {
+		x: () => number;
+		y: () => number;
+		scale: () => number;
+		rotate: () => number;
+	},
+	to: {
+		x: () => number;
+		y: () => number;
+		scale: () => number;
+		rotate: () => number;
+	},
+	amount = 10,
+	duration = 1000,
+) {
 	for (let i = 0; i < amount; i++) {
-		const particle = element.cloneNode(true) as HTMLElement;
+		let particle: HTMLElement;
+		if (Array.isArray(element)) {
+			particle = element[random(0, element.length - 1)].cloneNode(true) as HTMLElement;
+		} else {
+			particle = element.cloneNode(true) as HTMLElement;
+		}
+
 		particle.classList.add("particle");
-		particle.style.left = `${x}px`;
-		particle.style.top = `${y}px`;
+		particle.style.left = `${from.x()}px`;
+		particle.style.top = `${from.y()}px`;
 
 		tween(particle, {
+			from: {
+				x: 0,
+				y: 0,
+				scale: from.scale(),
+				rotate: from.rotate(),
+				opacity: 1,
+			},
 			to: {
-				x: random(-170, 130),
-				y: random(-250, 50),
-				scale: random(5, 20) / 10,
-				rotate: random(-360, 360),
+				x: to.x(),
+				y: to.y(),
+				scale: to.scale(),
+				rotate: to.rotate(),
+				opacity: 0.75,
 			},
-			duration: 1000,
+			duration,
 			easing: easings.easeOutQuint,
-			onComplete: () => {
-				particle.remove();
-			},
 		});
 
 		setTimeout(() => {
 			tween(particle, {
+				from: {
+					opacity: 0.75,
+				},
 				to: {
 					opacity: 0,
 				},
-				duration: 1000,
+				duration: duration / 2,
 				easing: easings.easeOutQuint,
 				onComplete: () => {
 					particle.remove();
 				},
 			});
-		}, 500);
+		}, duration / 2);
 
 		mount(gameContainer, particle);
 	}
 
-	element.remove();
+	if (Array.isArray(element)) {
+		element.forEach((item) => {
+			item.remove();
+		});
+	} else {
+		element.remove();
+	}
 }
