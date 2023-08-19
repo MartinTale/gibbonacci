@@ -82,7 +82,7 @@ export function initGame() {
 	checkCurrentNumberButton.classList.add("check-current-number");
 	mount(gameContainer, checkCurrentNumberButton);
 
-	const progress = new ProgressBar(gameContainer, 0, 100, 0);
+	const progress = new ProgressBar(gameContainer, 0, 50, 0);
 	progress.container.style.position = "absolute";
 	progress.container.style.bottom = "15px";
 	progress.setValue(state.numbersFound.length);
