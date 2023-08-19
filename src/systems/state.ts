@@ -1,14 +1,5 @@
-const STATE_KEY = "js13kgames-2023";
-
+const STATE_KEY = "monkey-bonacci";
 export type Path = "sound" | "screen";
-
-export const HeroType = {
-	SWORDSMAN: 0,
-	ARCHER: 1,
-	KNIGHT: 2,
-} as const;
-type HeroTypeKeys = keyof typeof HeroType;
-type HeroTypeValues = (typeof HeroType)[HeroTypeKeys];
 
 export const HeroPropType = {
 	ID: 0,
@@ -22,30 +13,22 @@ export type State = {
 	lastProcessedAt: number;
 	sound: boolean | null;
 
-	activeHero: HeroTypeValues;
-	heroes: [
-		[number, number, number, number, number],
-		[number, number, number, number, number],
-		[number, number, number, number, number],
-	];
-
 	level: number;
-	enemy: [number, number, number, number, number];
+
+	numbersChecked: number;
+	numbersFound: number[];
+	nextFibonacciNumber: number;
 };
 
 export const emptyState: State = {
 	lastProcessedAt: Date.now(),
 	sound: null,
 
-	activeHero: 0,
-	heroes: [
-		[0, 100, 100, 5, 5],
-		[1, 50, 50, 5, 0],
-		[2, 75, 75, 10, 5],
-	],
-
 	level: 0,
-	enemy: [0, 100, 100, 10, 10],
+
+	numbersChecked: 0,
+	numbersFound: [],
+	nextFibonacciNumber: 0,
 };
 
 export let state: State;

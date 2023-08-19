@@ -1,17 +1,15 @@
 import "./reset.css";
 import "./defaults.css";
 import { initMusic } from "./systems/music";
-import { el, mount, svgEl } from "./helpers/dom";
+import { mount } from "./helpers/dom";
 import { initState, resetState } from "./systems/state";
 import { SVGs } from "./systems/svgs";
 import { initFireflies } from "./components/fireflies/fireflies";
 import { EdgeLinkButton, EdgeButton } from "./components/edge-button/edge-button";
-import { initGame, startGameLoop } from "./game/game";
-import { createButton } from "./components/button/button";
-import { DataKey, getters, setters } from "./systems/bind";
+import { initGame } from "./game/game";
 import { colors, setGameColor } from "./helpers/colors";
 import { closeModal, openModal } from "./components/modal/modal";
-import { battleContainer, initBattle } from "./game/battle/battle";
+import { createScaleableContainer } from "./components/scaleable-container/scaleable-container";
 
 export let bodyElement: HTMLElement;
 export let gameContainer: HTMLElement;
@@ -25,13 +23,13 @@ window.addEventListener("DOMContentLoaded", () => {
 	setGameColor(colors[0]);
 	initFireflies();
 
-	gameContainer = el("div.game");
+	gameContainer = createScaleableContainer(bodyElement, 360, 780, "bottom", "game");
 	mount(bodyElement, gameContainer);
 
 	initMusic();
 
 	new EdgeLinkButton(bodyElement, SVGs.discord, "#5865F2", 8, -8, "https://discord.gg/kPf8XwNuZT");
-	new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=js13kgames-2023");
+	new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=monkey-bonacci");
 
 	soundToggle = new EdgeButton(bodyElement, SVGs.sound, "sound", 8, 8);
 
@@ -101,42 +99,5 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	// mount(gameContainer, testButton2);
 
-	initBattle();
-	mount(gameContainer, battleContainer);
-
-	const swordsmanButton = createButton(
-		svgEl(SVGs.swordsman, "#fff"),
-		() => {
-			setters[DataKey.activeHero](0);
-			setters[DataKey.level](getters[DataKey.level]() + 1);
-		},
-		"primary",
-	);
-	swordsmanButton.classList.add("hero-nav");
-	mount(gameContainer, swordsmanButton);
-
-	const archerButton = createButton(
-		svgEl(SVGs.archer, "#fff"),
-		() => {
-			setters[DataKey.activeHero](1);
-			setters[DataKey.level](getters[DataKey.level]() + 1);
-		},
-		"primary",
-	);
-	archerButton.classList.add("hero-nav");
-	mount(gameContainer, archerButton);
-
-	const knightButton = createButton(
-		svgEl(SVGs["mounted-knight"], "#fff"),
-		() => {
-			setters[DataKey.activeHero](2);
-			setters[DataKey.level](getters[DataKey.level]() + 1);
-		},
-		"primary",
-	);
-	knightButton.classList.add("hero-nav");
-	mount(gameContainer, knightButton);
-
 	initGame();
-	startGameLoop();
 });

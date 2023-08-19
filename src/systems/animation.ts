@@ -1,4 +1,6 @@
-import { getTransforms } from "../helpers/dom";
+import { gameContainer } from "..";
+import { getTransforms, mount } from "../helpers/dom";
+import { random } from "../helpers/numbers";
 
 type CSSProperties = {
 	x?: number;
@@ -23,12 +25,12 @@ export function tween(target: HTMLElement, props: TweenProperties) {
 	const id = tweenIterator++;
 
 	target.style.transition = "none";
-	target.style.pointerEvents = "none";
+	// target.style.pointerEvents = "none";
 
 	const onComplete = () => {
 		delete tweens[id];
 		target.style.transition = "";
-		target.style.pointerEvents = "";
+		// target.style.pointerEvents = "";
 		props.onComplete?.();
 	};
 
@@ -305,3 +307,43 @@ export const easings = {
 		return pos;
 	},
 };
+
+export function explode(x: number, y: number, element: HTMLElement, amount = 10) {
+	for (let i = 0; i < amount; i++) {
+		const particle = element.cloneNode(true) as HTMLElement;
+		particle.classList.add("particle");
+		particle.style.left = `${x}px`;
+		particle.style.top = `${y}px`;
+
+		tween(particle, {
+			to: {
+				x: random(-170, 130),
+				y: random(-250, 50),
+				scale: random(5, 20) / 10,
+				rotate: random(-360, 360),
+			},
+			duration: 1000,
+			easing: easings.easeOutQuint,
+			onComplete: () => {
+				particle.remove();
+			},
+		});
+
+		setTimeout(() => {
+			tween(particle, {
+				to: {
+					opacity: 0,
+				},
+				duration: 1000,
+				easing: easings.easeOutQuint,
+				onComplete: () => {
+					particle.remove();
+				},
+			});
+		}, 500);
+
+		mount(gameContainer, particle);
+	}
+
+	element.remove();
+}

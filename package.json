@@ -1,5 +1,5 @@
 {
-	"name": "js13kgames-2023",
+	"name": "monkey-bonacci",
 	"type": "module",
 	"version": "0.0.1",
 	"license": "MIT",
@@ -12,12 +12,12 @@
 		"optimize": "node optimize.js"
 	},
 	"devDependencies": {
-		"js13k-vite-plugins": "0.1.5",
 		"@typescript-eslint/eslint-plugin": "6.0.0",
 		"@typescript-eslint/parser": "6.0.0",
 		"eslint": "8.44.0",
 		"eslint-config-prettier": "8.8.0",
 		"eslint-plugin-prettier": "4.2.1",
+		"js13k-vite-plugins": "0.1.5",
 		"prettier": "3.0.0",
 		"terser": "5.18.2",
 		"typescript": "5.1.6",

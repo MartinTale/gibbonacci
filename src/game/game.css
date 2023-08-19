@@ -7,3 +7,46 @@
 .game * {
 	transition: all 0.2s ease-in-out;
 }
+
+.game > * {
+	z-index: 1;
+}
+
+.numbers-found {
+	flex-direction: column;
+	position: absolute;
+	top: 60px;
+	font-size: 40px;
+	height: 200px;
+	color: #fff;
+}
+
+.name {
+	position: absolute;
+	top: 10px;
+	color: var(--color);
+}
+
+.check-current-number {
+	position: absolute;
+	bottom: 55px;
+}
+
+.numbers-found * {
+	transition: all 0.5s ease-in-out;
+	position: absolute;
+}
+
+.current {
+	font-size: 50px;
+	position: absolute;
+	bottom: 100px;
+}
+
+.particle {
+	position: absolute;
+	width: 40px;
+	height: 40px;
+	pointer-events: none;
+	z-index: 0 !important;
+}
