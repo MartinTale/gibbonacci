@@ -136,7 +136,7 @@ function renderNumbersFound() {
 	const lastNumbers = state.numbersFound.slice(-6);
 
 	lastNumbers.forEach((number) => {
-		const abbreviatedNumber = abbreviateNumber(number);
+		const abbreviatedNumber = abbreviateNumber(number, 9);
 
 		const numberFoundElement = el("div.number-found", abbreviatedNumber);
 		mount(numbersFoundContainer, numberFoundElement);
@@ -152,7 +152,7 @@ export function addNumberFound(number: number) {
 		numbersFoundElements.shift();
 	}
 
-	const numberFoundElement = el("div.number-found", abbreviateNumber(number));
+	const numberFoundElement = el("div.number-found", abbreviateNumber(number, 9));
 	mount(numbersFoundContainer, numberFoundElement);
 	numbersFoundElements.push(numberFoundElement);
 
