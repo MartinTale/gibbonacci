@@ -2,7 +2,7 @@ import "./monkey.css";
 import { el, mount, setTextContent, svgEl } from "../helpers/dom";
 import { SVGs } from "../systems/svgs";
 import { MonkeyData, state } from "../systems/state";
-import { explode } from "../systems/animation";
+import { easings, explode, tween } from "../systems/animation";
 import { abbreviateNumber, getMathSymbolElements, random, randomNegativeOrPositiveOne } from "../helpers/numbers";
 import { onBananaResourceChange, onNumberResourceChange } from "./events";
 import { playSound, sounds } from "../systems/music";
@@ -116,7 +116,7 @@ export class Monkey {
 	}
 
 	renderAffordability() {
-		this.costElement.classList.toggle("can-afford", this.canAfford());
+		this.rootElement.classList.toggle("can-afford", this.canAfford());
 	}
 
 	canAfford() {
@@ -133,6 +133,8 @@ export class Monkey {
 		if (!this.canAfford()) {
 			return;
 		}
+
+		playSound(sounds.tap);
 
 		const cost = this.getCost();
 
@@ -154,6 +156,41 @@ export class Monkey {
 		this.renderMonkeyLevel();
 		this.renderCost();
 		this.renderAffordability();
+
+		tween(this.rootElement, {
+			from: {
+				x: 0,
+				y: 0,
+				scale: 1,
+				rotate: 0,
+			},
+			to: {
+				x: 0,
+				y: -10,
+				scale: 1.4,
+				rotate: 0,
+			},
+			duration: 200,
+			easing: easings.easeInOutExpo,
+			onComplete: () => {
+				tween(this.rootElement, {
+					from: {
+						x: 0,
+						y: -10,
+						scale: 1.4,
+						rotate: 0,
+					},
+					to: {
+						x: 0,
+						y: 0,
+						scale: 1,
+						rotate: 0,
+					},
+					duration: 800,
+					easing: easings.easeOutBounce,
+				});
+			},
+		});
 	}
 
 	process(time: number) {

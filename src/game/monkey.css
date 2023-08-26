@@ -7,7 +7,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	cursor: pointer;
+	cursor: not-allowed;
 }
 
 .monkey {
@@ -15,6 +15,10 @@
 	height: 100%;
 	opacity: 0.25;
 	filter: grayscale(1);
+}
+
+.can-afford .monkey {
+	cursor: pointer;
 }
 
 .active .monkey {
@@ -59,7 +63,7 @@
 	margin: 0;
 }
 
-.cost.can-afford {
+.can-afford .cost {
 	opacity: 1;
 	filter: none;
 }
