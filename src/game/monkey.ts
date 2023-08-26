@@ -247,7 +247,7 @@ export class Monkey {
 
 		setTextContent(currentNumberElement, abbreviateNumber(state.numbersChecked));
 
-		state.numbers += 1;
+		state.numbers += numbers;
 		onNumberResourceChange();
 	}
 }
