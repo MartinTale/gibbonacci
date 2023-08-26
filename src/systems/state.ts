@@ -9,26 +9,42 @@ export const HeroPropType = {
 	DEFENSE: 4,
 } as const;
 
+export type MonkeyData = {
+	awake: boolean;
+	level: number;
+};
+
 export type State = {
 	lastProcessedAt: number;
 	sound: boolean | null;
 
-	level: number;
-
 	numbersChecked: number;
 	numbersFound: number[];
 	nextFibonacciNumber: number;
+
+	bananas: number;
+	numbers: number;
+
+	monkeys: [MonkeyData, MonkeyData, MonkeyData, MonkeyData];
 };
 
 export const emptyState: State = {
 	lastProcessedAt: Date.now(),
 	sound: null,
 
-	level: 0,
-
 	numbersChecked: 0,
 	numbersFound: [],
 	nextFibonacciNumber: 0,
+
+	bananas: 0,
+	numbers: 0,
+
+	monkeys: [
+		{ awake: false, level: 1 },
+		{ awake: false, level: 1 },
+		{ awake: false, level: 1 },
+		{ awake: false, level: 1 },
+	],
 };
 
 export let state: State;

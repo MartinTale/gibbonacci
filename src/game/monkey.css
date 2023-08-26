@@ -1,0 +1,94 @@
+.monkey-container {
+	width: 50px;
+	height: 50px;
+	margin-left: -25px;
+	margin-top: -25px;
+	position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.monkey {
+	width: 100%;
+	height: 100%;
+	opacity: 0.25;
+	filter: grayscale(1);
+}
+
+.active .monkey {
+	opacity: 1;
+	filter: none;
+	animation: wiggle-and-float 1s infinite;
+}
+
+.sleep {
+	position: absolute;
+	top: 0;
+	width: 20px;
+	height: 20px;
+}
+
+.active .sleep {
+	opacity: 0;
+}
+
+.cost {
+	position: absolute;
+	bottom: -14px;
+	margin-left: -4px;
+	justify-content: center;
+	align-items: center;
+	font-size: 16px;
+	opacity: 0.5;
+	filter: grayscale(1);
+}
+
+.cost svg {
+	width: 18px;
+	height: 18px;
+	margin-right: 2px;
+}
+
+.cost svg.hidden {
+	display: none;
+}
+
+.cost b {
+	margin: 0;
+}
+
+.cost.can-afford {
+	opacity: 1;
+	filter: none;
+}
+
+.level {
+	position: absolute;
+	top: -14px;
+	font-size: 16px;
+	opacity: 0;
+}
+
+.active .level {
+	opacity: 1;
+}
+
+@keyframes wiggle-and-float {
+	0% {
+		transform: rotate(0deg) translateY(0px);
+	}
+	25% {
+		transform: rotate(7deg) translateY(-2px);
+	}
+	50% {
+		transform: rotate(0deg) translateY(0px);
+	}
+	75% {
+		transform: rotate(-7deg) translateY(-2px);
+	}
+	100% {
+		transform: rotate(0deg) translateY(0px);
+	}
+}

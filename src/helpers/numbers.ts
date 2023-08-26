@@ -1,3 +1,5 @@
+import { el } from "./dom";
+
 const tiers = ["", "K", "M", "B", "T", "Q"];
 
 export function abbreviateNumber(
@@ -54,4 +56,50 @@ export function removeTrailingZeros(value: string): string {
 
 export function random(min: number, max: number): number {
 	return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function randomNegativeOrPositiveOne() {
+	return Math.random() < 0.5 ? -1 : 1;
+}
+
+// https://www.calculators.org/math/html-math.php
+const mathSymbols = [
+	"?",
+	"+",
+	"-",
+	"×",
+	"÷",
+	"=",
+	"≠",
+	"±",
+	"<",
+	">",
+	"ƒ",
+	"%",
+	"∃",
+	"∅",
+	"∏",
+	"∑",
+	"√",
+	"∛",
+	"∜",
+	"∞",
+	"⊾",
+	"⊿",
+	"⋈",
+	"Δ",
+	"Θ",
+	"Λ",
+	"Φ",
+	"Ψ",
+	"Ω",
+	"α",
+	"β",
+	"γ",
+	"δ",
+	"λ",
+];
+
+export function getMathSymbolElements() {
+	return mathSymbols.map((symbol) => el("span.math-symbol", symbol));
 }

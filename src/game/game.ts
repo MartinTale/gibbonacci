@@ -2,17 +2,26 @@ import { gameContainer } from "..";
 import { createButton } from "../components/button/button";
 import { ProgressBar } from "../components/progress-bar/progress-bar";
 import { el, mount, setTextContent, svgEl } from "../helpers/dom";
-import { abbreviateNumber, random } from "../helpers/numbers";
+import { abbreviateNumber, getMathSymbolElements, random } from "../helpers/numbers";
 import { easings, explode, tween, tweens } from "../systems/animation";
+import { playSound, sounds } from "../systems/music";
 import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
+import { onBananaResourceChange, onNumberResourceChange } from "./events";
 
 import "./game.css";
+import { Monkey } from "./monkey";
 
 const numbersFoundContainer = el("div.numbers-found");
 const numbersFoundElements: HTMLElement[] = [];
-let currentNumberElement: HTMLElement;
+export let currentNumberElement: HTMLElement;
 let checkCurrentNumberButton: HTMLElement;
+
+export let progress: ProgressBar;
+
+export const bananasResourceAmountElement = el("b");
+export const numbersResourceAmountElement = el("b");
+export const monkeys: Monkey[] = [];
 
 export function initGame() {
 	const gameNameElement = el("h1.name", "MonkeyBonacci");
@@ -28,10 +37,14 @@ export function initGame() {
 		"Check!",
 		() => {
 			if (state.numbersChecked >= state.nextFibonacciNumber) {
+				playSound(sounds.victory2);
 				state.numbersFound.push(state.nextFibonacciNumber);
 				addNumberFound(state.nextFibonacciNumber);
 				state.nextFibonacciNumber = getNextFibonacciNumber();
 				progress.setValue(state.numbersFound.length);
+
+				state.bananas += 1;
+				onBananaResourceChange();
 
 				explode(
 					[
@@ -76,28 +89,42 @@ export function initGame() {
 
 			state.numbersChecked += 1;
 			setTextContent(currentNumberElement, abbreviateNumber(state.numbersChecked));
+
+			state.numbers += 1;
+			onNumberResourceChange();
 		},
 		"primary",
 	);
 	checkCurrentNumberButton.classList.add("check-current-number");
 	mount(gameContainer, checkCurrentNumberButton);
 
-	const progress = new ProgressBar(gameContainer, 0, 50, 0);
+	progress = new ProgressBar(gameContainer, 0, 50, 0);
 	progress.container.style.position = "absolute";
-	progress.container.style.bottom = "15px";
+	progress.container.style.top = "60px";
 	progress.setValue(state.numbersFound.length);
+
+	monkeys.push(new Monkey(gameContainer, 60, 650, 0));
+	monkeys.push(new Monkey(gameContainer, 300, 650, 1));
+	monkeys.push(new Monkey(gameContainer, 100, 570, 2));
+	monkeys.push(new Monkey(gameContainer, 260, 570, 3));
+
+	const bananasElement = el("div.bananas", [svgEl(SVGs.banana, "var(--color)"), bananasResourceAmountElement]);
+	onBananaResourceChange();
+	const numbersElement = el("div.numbers", [svgEl(SVGs.hashtag, "var(--color)"), numbersResourceAmountElement]);
+	onNumberResourceChange();
+
+	mount(gameContainer, el("div.resources", [bananasElement, numbersElement]));
 
 	processGameState();
 }
 
 function processGameState() {
 	const newProcessingTime = Date.now();
-	// const secondsPassed = (newProcessingTime - state.lastProcessedAt) / 1000;
+	const secondsPassed = (newProcessingTime - state.lastProcessedAt) / 1000;
 
 	Object.values(tweens).forEach((updateTween) => updateTween(newProcessingTime));
-	// console.log(secondsPassed);
 
-	// setters[DataKey.level](getters[DataKey.level]() + secondsPassed);
+	monkeys.forEach((monkey) => monkey.process(secondsPassed));
 
 	state.lastProcessedAt = newProcessingTime;
 	requestAnimationFrame(processGameState);
@@ -119,7 +146,7 @@ function renderNumbersFound() {
 	updateNumbersFoundStyle();
 }
 
-function addNumberFound(number: number) {
+export function addNumberFound(number: number) {
 	if (numbersFoundElements.length >= 6) {
 		numbersFoundElements[0].remove();
 		numbersFoundElements.shift();
@@ -167,7 +194,7 @@ function updateNumbersFoundStyle() {
 	});
 }
 
-function getNextFibonacciNumber() {
+export function getNextFibonacciNumber() {
 	if (state.numbersFound.length === 0) {
 		return 0;
 	}
@@ -181,45 +208,4 @@ function getNextFibonacciNumber() {
 	}
 
 	return state.numbersFound[state.numbersFound.length - 1] + state.numbersFound[state.numbersFound.length - 2];
-}
-
-// https://www.calculators.org/math/html-math.php
-const mathSymbols = [
-	"?",
-	"+",
-	"-",
-	"×",
-	"÷",
-	"=",
-	"≠",
-	"±",
-	"<",
-	">",
-	"ƒ",
-	"%",
-	"∃",
-	"∅",
-	"∏",
-	"∑",
-	"√",
-	"∛",
-	"∜",
-	"∞",
-	"⊾",
-	"⊿",
-	"⋈",
-	"Δ",
-	"Θ",
-	"Λ",
-	"Φ",
-	"Ψ",
-	"Ω",
-	"α",
-	"β",
-	"γ",
-	"δ",
-	"λ",
-];
-function getMathSymbolElements() {
-	return mathSymbols.map((symbol) => el("span.math-symbol", symbol));
 }

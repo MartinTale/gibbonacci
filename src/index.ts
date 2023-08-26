@@ -68,36 +68,5 @@ window.addEventListener("DOMContentLoaded", () => {
 		);
 	}
 
-	// const testButton = createButton(
-	// 	"",
-	// 	() => {
-	// 		setters[DataKey.level](getters[DataKey.level]() + 1);
-	// 		tween(testButton, {
-	// 			to: {
-	// 				x: random(-200, 200),
-	// 				y: random(-100, 300),
-	// 				rotate: random(-180, 180),
-	// 				scale: random(5, 20) / 10,
-	// 				opacity: random(20, 100) / 100,
-	// 			},
-	// 			duration: 1000,
-	// 			easing: easings.swingTo,
-	// 		});
-	// 	},
-	// 	"primary",
-	// );
-
-	// mount(gameContainer, testButton);
-
-	// const testButton2 = createButton(
-	// 	"",
-	// 	() => {
-	// 		setters[DataKey.level](getters[DataKey.level]() + 1);
-	// 	},
-	// 	"primary",
-	// );
-
-	// mount(gameContainer, testButton2);
-
 	initGame();
 });
