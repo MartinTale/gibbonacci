@@ -66,6 +66,7 @@
 .can-afford .cost {
 	opacity: 1;
 	filter: none;
+	cursor: pointer;
 }
 
 .level {
