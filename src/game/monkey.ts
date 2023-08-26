@@ -66,7 +66,7 @@ export class Monkey {
 	}
 
 	renderMonkeyLevel() {
-		setTextContent(this.levelElement, abbreviateNumber(Math.pow(2, this.data.level - 1)));
+		setTextContent(this.levelElement, abbreviateNumber(Math.pow(2, this.data.level)));
 	}
 
 	playMonkeyCheckAnimation() {
@@ -102,7 +102,7 @@ export class Monkey {
 		if (this.data.awake === false) {
 			return [5, 0];
 		} else {
-			return [100 * Math.pow(2, this.data.level), 1];
+			return [100 * Math.pow(2, this.data.level - 1), 1];
 		}
 	}
 
@@ -205,7 +205,7 @@ export class Monkey {
 
 			this.timeAccumulated -= timeUsed;
 
-			this.findNumbers(timeUsed * Math.pow(2, this.data.level - 1));
+			this.findNumbers(timeUsed * Math.pow(2, this.data.level));
 		}
 	}
 
