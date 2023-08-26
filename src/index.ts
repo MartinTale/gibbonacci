@@ -2,7 +2,7 @@ import "./reset.css";
 import "./defaults.css";
 import { initMusic } from "./systems/music";
 import { mount } from "./helpers/dom";
-import { initState, resetState } from "./systems/state";
+import { initState, resetState, state } from "./systems/state";
 import { SVGs } from "./systems/svgs";
 import { initFireflies } from "./components/fireflies/fireflies";
 import { EdgeLinkButton, EdgeButton } from "./components/edge-button/edge-button";
@@ -32,6 +32,7 @@ window.addEventListener("DOMContentLoaded", () => {
 	new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=monkey-bonacci");
 
 	soundToggle = new EdgeButton(bodyElement, SVGs.sound, "sound", 8, 8);
+	soundToggle.renderState(state.sound === true);
 
 	// if (import.meta.env.MODE === "development") {
 	new EdgeLinkButton(
