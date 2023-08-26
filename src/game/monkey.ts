@@ -66,7 +66,7 @@ export class Monkey {
 	}
 
 	renderMonkeyLevel() {
-		setTextContent(this.levelElement, this.data.level.toString());
+		setTextContent(this.levelElement, abbreviateNumber(Math.pow(2, this.data.level - 1)));
 	}
 
 	playMonkeyCheckAnimation() {
