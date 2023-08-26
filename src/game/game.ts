@@ -77,7 +77,7 @@ export function initGame() {
 						rotate: () => 0,
 					},
 					{
-						x: () => random(-150, 150),
+						x: () => random(-100, 100),
 						y: () => random(-150, 20),
 						scale: () => random(10, 20) / 10,
 						rotate: () => random(-45, 45),

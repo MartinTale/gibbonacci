@@ -1,6 +1,8 @@
 const STATE_KEY = "monkey-bonacci";
 export type Path = "sound" | "screen";
 
+const version = "0.0.1";
+
 export const HeroPropType = {
 	ID: 0,
 	HP: 1,
@@ -15,6 +17,7 @@ export type MonkeyData = {
 };
 
 export type State = {
+	version: string;
 	lastProcessedAt: number;
 	sound: boolean | null;
 
@@ -29,6 +32,7 @@ export type State = {
 };
 
 export const emptyState: State = {
+	version,
 	lastProcessedAt: Date.now(),
 	sound: null,
 
@@ -77,7 +81,11 @@ function loadState() {
 	const jsonState = JSON.parse(decodedState) as State | undefined;
 
 	if (jsonState) {
-		state = Object.assign({ ...emptyState }, jsonState);
+		if (jsonState?.version !== version) {
+			state = { ...emptyState };
+		} else {
+			state = Object.assign({ ...emptyState }, jsonState);
+		}
 	} else {
 		state = { ...emptyState };
 	}
