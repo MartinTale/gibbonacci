@@ -1,3 +1,4 @@
+import "./game.css";
 import { gameContainer } from "..";
 import { createButton } from "../components/button/button";
 import { openModal } from "../components/modal/modal";
@@ -9,9 +10,9 @@ import { playSound, sounds } from "../systems/music";
 import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
 import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
-
-import "./game.css";
 import { Monkey } from "./monkey";
+
+export const maxNumbers = 204;
 
 const numbersFoundContainer = el("div.numbers-found");
 const numbersFoundElements: HTMLElement[] = [];
@@ -129,7 +130,7 @@ export function initGame() {
 	meMonkeyButton.classList.add("me-monkey");
 	mount(gameContainer, meMonkeyButton);
 
-	progress = new ProgressBar(gameContainer, 0, 204, 0);
+	progress = new ProgressBar(gameContainer, 0, maxNumbers, 0);
 	progress.container.style.position = "absolute";
 	progress.container.style.top = "60px";
 	onNumbersFoundChange();

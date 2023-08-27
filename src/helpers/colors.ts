@@ -1,12 +1,13 @@
 import { updateFireflyColor } from "../components/fireflies/fireflies";
+import { maxNumbers } from "../game/game";
 
 type RGB = { r: number; g: number; b: number };
 
 // export const colors = ["#a87141", "#a87141", "#a87141", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#E25041"];
 export const colors = ["#a87141", "#a87141", "#a87141", "#41A85F", "#FAC51C", "#E25041"];
 
-const colorsPerIndex = Math.floor(204 / colors.length);
-console.warn("colorsPerIndex", colorsPerIndex);
+const colorsPerIndex = Math.floor(maxNumbers / colors.length);
+
 export function setGameColorFromLevel(level: number) {
 	const realColorIndex = Math.min(colors.length - 1, Math.floor(level / colorsPerIndex));
 	const color = getColorFromRange(
