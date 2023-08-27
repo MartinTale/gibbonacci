@@ -6,7 +6,7 @@ import { easings, explode, tween } from "../systems/animation";
 import { abbreviateNumber, getMathSymbolElements, random, randomNegativeOrPositiveOne } from "../helpers/numbers";
 import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
 import { playSound, sounds } from "../systems/music";
-import { addNumberFound, currentNumberElement, getNextFibonacciNumber, monkeys, progress } from "./game";
+import { addNumberFound, currentNumberElement, getNextFibonacciNumber, monkeys } from "./game";
 
 export class Monkey {
 	rootElement: HTMLElement;
