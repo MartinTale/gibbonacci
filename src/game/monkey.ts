@@ -4,7 +4,7 @@ import { SVGs } from "../systems/svgs";
 import { MonkeyData, state } from "../systems/state";
 import { easings, explode, tween } from "../systems/animation";
 import { abbreviateNumber, getMathSymbolElements, random, randomNegativeOrPositiveOne } from "../helpers/numbers";
-import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange } from "./events";
+import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
 import { playSound, sounds } from "../systems/music";
 import { addNumberFound, currentNumberElement, getNextFibonacciNumber, monkeys, progress } from "./game";
 
@@ -304,7 +304,7 @@ export class Monkey {
 			console.log(state.numbersFound.length);
 			addNumberFound(state.nextFibonacciNumber);
 			state.nextFibonacciNumber = getNextFibonacciNumber();
-			progress.setValue(state.numbersFound.length);
+			onNumbersFoundChange();
 
 			state.bananas += 1;
 			onBananaResourceChange();

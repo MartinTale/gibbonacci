@@ -8,7 +8,7 @@ import { easings, explode, tween, tweens } from "../systems/animation";
 import { playSound, sounds } from "../systems/music";
 import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
-import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange } from "./events";
+import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
 
 import "./game.css";
 import { Monkey } from "./monkey";
@@ -45,7 +45,7 @@ export function initGame() {
 				state.numbersFound.push(state.nextFibonacciNumber);
 				addNumberFound(state.nextFibonacciNumber);
 				state.nextFibonacciNumber = getNextFibonacciNumber();
-				progress.setValue(state.numbersFound.length);
+				onNumbersFoundChange();
 
 				state.bananas += 1;
 				onBananaResourceChange();
@@ -129,10 +129,10 @@ export function initGame() {
 	meMonkeyButton.classList.add("me-monkey");
 	mount(gameContainer, meMonkeyButton);
 
-	progress = new ProgressBar(gameContainer, 0, 200, 0);
+	progress = new ProgressBar(gameContainer, 0, 204, 0);
 	progress.container.style.position = "absolute";
 	progress.container.style.top = "60px";
-	progress.setValue(state.numbersFound.length);
+	onNumbersFoundChange();
 
 	onMonkeyChange();
 

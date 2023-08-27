@@ -2,26 +2,21 @@ import { updateFireflyColor } from "../components/fireflies/fireflies";
 
 type RGB = { r: number; g: number; b: number };
 
-export const colors = ["#a87141", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#E25041", "#a87141"];
+// export const colors = ["#a87141", "#a87141", "#a87141", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#E25041"];
+export const colors = ["#a87141", "#a87141", "#a87141", "#41A85F", "#FAC51C", "#E25041"];
 
-// const colorsPerIndex = 20;
-// let colorIndex = 0;
-// setInterval(() => {
-// 	colorIndex++;
+const colorsPerIndex = Math.floor(204 / colors.length);
+console.warn("colorsPerIndex", colorsPerIndex);
+export function setGameColorFromLevel(level: number) {
+	const realColorIndex = Math.min(colors.length - 1, Math.floor(level / colorsPerIndex));
+	const color = getColorFromRange(
+		hexToRgb(colors[realColorIndex]),
+		hexToRgb(colors[Math.min(colors.length - 1, realColorIndex + 1)]),
+		(level % colorsPerIndex) / colorsPerIndex,
+	);
 
-// 	const realColorIndex = Math.min(colors.length - 1, Math.floor(colorIndex / colorsPerIndex));
-// 	const color = getColorFromRange(
-// 		hexToRgb(colors[realColorIndex]),
-// 		hexToRgb(colors[Math.min(colors.length - 1, realColorIndex + 1)]),
-// 		(colorIndex % colorsPerIndex) / colorsPerIndex,
-// 	);
-
-// 	setGameColor(rgbToHex(color.r, color.g, color.b));
-
-// 	if (realColorIndex === colors.length - 1) {
-// 		colorIndex = 0;
-// 	}
-// }, 100);
+	setGameColor(rgbToHex(color.r, color.g, color.b));
+}
 
 export function setGameColor(newHexColor: string) {
 	const rgbColor = hexToRgb(newHexColor);
