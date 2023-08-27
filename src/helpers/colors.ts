@@ -1,6 +1,6 @@
 import { updateFireflyColor } from "../components/fireflies/fireflies";
-import { maxNumbers } from "../game/game";
 
+export const maxNumbers = 204;
 type RGB = { r: number; g: number; b: number };
 
 // export const colors = ["#a87141", "#a87141", "#a87141", "#41A85F", "#2C82C9", "#9365B8", "#FAC51C", "#E25041"];

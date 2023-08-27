@@ -1,7 +1,7 @@
 const STATE_KEY = "monkey-bonacci";
 export type Path = "sound" | "screen";
 
-const version = "0.0.3";
+const version = "0.0.4";
 
 export const HeroPropType = {
 	ID: 0,

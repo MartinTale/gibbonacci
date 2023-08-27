@@ -11,8 +11,7 @@ import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
 import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
 import { Monkey } from "./monkey";
-
-export const maxNumbers = 204;
+import { maxNumbers } from "../helpers/colors";
 
 const numbersFoundContainer = el("div.numbers-found");
 const numbersFoundElements: HTMLElement[] = [];
