@@ -1,5 +1,6 @@
 import { gameContainer } from "..";
 import { createButton } from "../components/button/button";
+import { openModal } from "../components/modal/modal";
 import { ProgressBar } from "../components/progress-bar/progress-bar";
 import { el, mount, setTextContent, svgEl } from "../helpers/dom";
 import { abbreviateNumber, getMathSymbolElements, random } from "../helpers/numbers";
@@ -7,7 +8,7 @@ import { easings, explode, tween, tweens } from "../systems/animation";
 import { playSound, sounds } from "../systems/music";
 import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
-import { onBananaResourceChange, onNumberResourceChange } from "./events";
+import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange } from "./events";
 
 import "./game.css";
 import { Monkey } from "./monkey";
@@ -16,12 +17,14 @@ const numbersFoundContainer = el("div.numbers-found");
 const numbersFoundElements: HTMLElement[] = [];
 export let currentNumberElement: HTMLElement;
 let checkCurrentNumberButton: HTMLElement;
+const checkNumberLabel = el("b.is-fibonacci", "Is Fibonacci?");
 
 export let progress: ProgressBar;
 
 export const bananasResourceAmountElement = el("b");
 export const numbersResourceAmountElement = el("b");
 export const monkeys: Monkey[] = [];
+export let meMonkey: Monkey;
 
 export function initGame() {
 	const gameNameElement = el("h1.name", "MonkeyBonacci");
@@ -32,6 +35,7 @@ export function initGame() {
 
 	currentNumberElement = el("b.current", abbreviateNumber(state.numbersChecked));
 	mount(gameContainer, currentNumberElement);
+	mount(gameContainer, checkNumberLabel);
 
 	checkCurrentNumberButton = createButton(
 		"Check!",
@@ -54,7 +58,7 @@ export function initGame() {
 					],
 					{
 						x: () => 160,
-						y: () => 600,
+						y: () => 550,
 						scale: () => 1,
 						rotate: () => 0,
 					},
@@ -72,7 +76,7 @@ export function initGame() {
 					getMathSymbolElements(),
 					{
 						x: () => 160,
-						y: () => 680,
+						y: () => 665,
 						scale: () => 1,
 						rotate: () => 0,
 					},
@@ -98,19 +102,51 @@ export function initGame() {
 	checkCurrentNumberButton.classList.add("check-current-number");
 	mount(gameContainer, checkCurrentNumberButton);
 
-	progress = new ProgressBar(gameContainer, 0, 50, 0);
+	meMonkey = new Monkey(gameContainer, 180, 680, -1, true);
+
+	const meMonkeyButton = createButton(
+		svgEl(SVGs.monkey, "var(--color)"),
+		() => {
+			playSound(sounds.tap);
+			openModal(
+				gameContainer,
+				"Me Monkey!",
+				[el("p", "Turn yourself into a monkey?"), el("br"), el("p", "..."), el("br"), el("b", "Really?")],
+				[
+					{
+						type: "primary",
+						content: "Yes, please!",
+						onClickCallback: () => {
+							meMonkey.buyUpgrade();
+						},
+					},
+				],
+				null,
+			);
+		},
+		"primary",
+	);
+	meMonkeyButton.classList.add("me-monkey");
+	mount(gameContainer, meMonkeyButton);
+
+	progress = new ProgressBar(gameContainer, 0, 200, 0);
 	progress.container.style.position = "absolute";
 	progress.container.style.top = "60px";
 	progress.setValue(state.numbersFound.length);
 
-	monkeys.push(new Monkey(gameContainer, 60, 650, 0));
-	monkeys.push(new Monkey(gameContainer, 300, 650, 1));
-	monkeys.push(new Monkey(gameContainer, 100, 570, 2));
-	monkeys.push(new Monkey(gameContainer, 260, 570, 3));
+	onMonkeyChange();
 
-	const bananasElement = el("div.bananas", [svgEl(SVGs.banana, "var(--color)"), bananasResourceAmountElement]);
+	monkeys.push(new Monkey(gameContainer, 40, 600, 0));
+	monkeys.push(new Monkey(gameContainer, 320, 600, 1));
+	monkeys.push(new Monkey(gameContainer, 90, 520, 2));
+	monkeys.push(new Monkey(gameContainer, 270, 520, 3));
+
+	const bananasElement = el("div.bananas", [
+		svgEl(SVGs["banana-bunch"], "var(--color)"),
+		bananasResourceAmountElement,
+	]);
 	onBananaResourceChange();
-	const numbersElement = el("div.numbers", [svgEl(SVGs.hashtag, "var(--color)"), numbersResourceAmountElement]);
+	const numbersElement = el("div.numbers", [svgEl(SVGs.turd, "var(--color)"), numbersResourceAmountElement]);
 	onNumberResourceChange();
 
 	mount(gameContainer, el("div.resources", [bananasElement, numbersElement]));
@@ -158,19 +194,19 @@ export function addNumberFound(number: number) {
 
 	tween(numberFoundElement, {
 		from: {
-			y: 400,
+			y: 300,
 			scale: 1,
 		},
 		to: {
-			y: 300,
+			y: 125,
 			scale: 3,
 		},
-		duration: 250,
+		duration: 500,
 		easing: easings.easeOutExpo,
 		onComplete: () => {
 			tween(numberFoundElement, {
 				from: {
-					y: 300,
+					y: 125,
 					scale: 3,
 				},
 				to: {

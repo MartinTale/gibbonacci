@@ -22,7 +22,7 @@
 .modal-container {
 	position: absolute;
 	margin: 32px;
-	padding: 16px 32px;
+	padding: 16px;
 	z-index: 102;
 	background-color: var(--bg);
 	border: 2px solid var(--color);
@@ -47,6 +47,11 @@
 	align-items: center;
 	flex-direction: column;
 	margin-bottom: 16px;
+}
+
+.modal-container main {
+	font-size: 18px;
+	flex-direction: column;
 }
 
 .modal-container footer {

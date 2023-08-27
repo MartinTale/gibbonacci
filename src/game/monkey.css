@@ -17,8 +17,22 @@
 	filter: grayscale(1);
 }
 
+.monkey svg,
+.sleep svg {
+	width: 100%;
+	height: 100%;
+}
+
 .can-afford .monkey {
 	cursor: pointer;
+}
+
+.monkey-container.me {
+	display: none;
+}
+
+.monkey-container.me.active {
+	display: flex;
 }
 
 .active .monkey {
@@ -44,15 +58,16 @@
 	margin-left: -4px;
 	justify-content: center;
 	align-items: center;
-	font-size: 16px;
+	font-size: 12px;
 	opacity: 0.5;
 	filter: grayscale(1);
 }
 
 .cost svg {
-	width: 18px;
-	height: 18px;
+	width: 14px;
+	height: 14px;
 	margin-right: 2px;
+	margin-top: -1px;
 }
 
 .cost svg.hidden {
@@ -72,7 +87,7 @@
 .level {
 	position: absolute;
 	top: -14px;
-	font-size: 16px;
+	font-size: 12px;
 	opacity: 0;
 }
 

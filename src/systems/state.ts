@@ -29,6 +29,7 @@ export type State = {
 	numbers: number;
 
 	monkeys: [MonkeyData, MonkeyData, MonkeyData, MonkeyData];
+	meMonkey: MonkeyData;
 };
 
 export const emptyState: State = {
@@ -49,6 +50,7 @@ export const emptyState: State = {
 		{ awake: false, level: 1 },
 		{ awake: false, level: 1 },
 	],
+	meMonkey: { awake: false, level: 0 },
 };
 
 export let state: State;

@@ -4,9 +4,9 @@ import { SVGs } from "../systems/svgs";
 import { MonkeyData, state } from "../systems/state";
 import { easings, explode, tween } from "../systems/animation";
 import { abbreviateNumber, getMathSymbolElements, random, randomNegativeOrPositiveOne } from "../helpers/numbers";
-import { onBananaResourceChange, onNumberResourceChange } from "./events";
+import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange } from "./events";
 import { playSound, sounds } from "../systems/music";
-import { addNumberFound, currentNumberElement, getNextFibonacciNumber, progress } from "./game";
+import { addNumberFound, currentNumberElement, getNextFibonacciNumber, monkeys, progress } from "./game";
 
 export class Monkey {
 	rootElement: HTMLElement;
@@ -27,12 +27,13 @@ export class Monkey {
 		public x: number,
 		public y: number,
 		public index: number,
+		public isMe = false,
 	) {
 		this.sleepElement = el("div.sleep", svgEl(SVGs["night-sleep"], "var(--color)"));
 		this.levelElement = el("b.level", "1");
 		this.monkeyElement = el("div.monkey", [svgEl(SVGs.monkey, "var(--color)"), this.levelElement]);
-		this.costBananaElement = svgEl(SVGs.banana, "var(--color)");
-		this.costNumberElement = svgEl(SVGs.hashtag, "var(--color)");
+		this.costBananaElement = svgEl(SVGs["banana-bunch"], "var(--color)");
+		this.costNumberElement = svgEl(SVGs.turd, "var(--color)");
 		this.costAmountElement = el("b");
 		this.costElement = el("div.cost", [this.costBananaElement, this.costNumberElement, this.costAmountElement]);
 		this.rootElement = el("div.monkey-container", [this.sleepElement, this.monkeyElement, this.costElement]);
@@ -40,7 +41,12 @@ export class Monkey {
 		this.rootElement.style.left = `${x}px`;
 		this.rootElement.style.top = `${y}px`;
 
-		this.data = state.monkeys[index];
+		if (isMe) {
+			this.rootElement.classList.add("me");
+			this.data = state.meMonkey;
+		} else {
+			this.data = state.monkeys[index];
+		}
 
 		this.renderMonkeyState();
 		this.renderMonkeyLevel();
@@ -53,12 +59,21 @@ export class Monkey {
 
 		mount(parentContainer, this.rootElement);
 
-		setTimeout(
-			() => {
-				this.playMonkeyCheckAnimation();
-			},
-			random(0, 1000 / Math.min(5, this.data.level)),
-		);
+		if (isMe) {
+			setTimeout(
+				() => {
+					this.playMonkeyThrowBananaAnimation();
+				},
+				random(0, 1000 / Math.min(5, this.data.level)),
+			);
+		} else {
+			setTimeout(
+				() => {
+					this.playMonkeyCheckAnimation();
+				},
+				random(0, 1000 / Math.min(5, this.data.level)),
+			);
+		}
 	}
 
 	renderMonkeyState() {
@@ -66,7 +81,14 @@ export class Monkey {
 	}
 
 	renderMonkeyLevel() {
-		setTextContent(this.levelElement, abbreviateNumber(Math.pow(2, this.data.level)));
+		if (this.isMe) {
+			setTextContent(this.levelElement, "x" + abbreviateNumber(1 + this.data.level));
+		} else {
+			setTextContent(
+				this.levelElement,
+				abbreviateNumber(Math.pow(2, this.data.level) * (state.meMonkey.level + 1)),
+			);
+		}
 	}
 
 	playMonkeyCheckAnimation() {
@@ -98,11 +120,55 @@ export class Monkey {
 		);
 	}
 
+	playMonkeyThrowBananaAnimation() {
+		const targetLocation = [
+			[-140, -75],
+			[140, -75],
+			[-90, -150],
+			[90, -150],
+		][random(0, 3)];
+
+		if (this.data.awake && this.isMe) {
+			explode(
+				svgEl(SVGs.banana, "var(--color)"),
+				{
+					x: () => this.x - 25,
+					y: () => this.y - 25,
+					scale: () => 0.25,
+					rotate: () => 0,
+				},
+				{
+					x: () => targetLocation[0],
+					y: () => targetLocation[1],
+					scale: () => random(10, 15) / 10,
+					rotate: () => random(-90, 90),
+				},
+				1,
+				1000,
+			);
+		}
+
+		setTimeout(
+			() => {
+				this.playMonkeyThrowBananaAnimation();
+			},
+			1000 / (1 + Math.min(5, this.data.level)),
+		);
+	}
+
 	getCost() {
-		if (this.data.awake === false) {
-			return [5, 0];
+		if (this.isMe) {
+			if (this.data.awake === false) {
+				return [0, 0];
+			} else {
+				return [5, 0];
+			}
 		} else {
-			return [100 * Math.pow(2, this.data.level - 1), 1];
+			if (this.data.awake === false) {
+				return [5, 0];
+			} else {
+				return [100 * Math.pow(2, this.data.level - 1), 1];
+			}
 		}
 	}
 
@@ -149,6 +215,7 @@ export class Monkey {
 		if (this.data.awake === false) {
 			this.data.awake = true;
 			this.renderMonkeyState();
+			onMonkeyChange();
 		} else {
 			this.data.level += 1;
 		}
@@ -157,6 +224,17 @@ export class Monkey {
 		this.renderCost();
 		this.renderAffordability();
 
+		this.popUp();
+
+		if (this.isMe) {
+			monkeys.forEach((monkey) => {
+				monkey.renderMonkeyLevel();
+				monkey.popUp();
+			});
+		}
+	}
+
+	popUp() {
 		tween(this.rootElement, {
 			from: {
 				x: 0,
@@ -198,6 +276,10 @@ export class Monkey {
 			return;
 		}
 
+		if (this.isMe) {
+			return;
+		}
+
 		this.timeAccumulated += time;
 
 		if (this.timeAccumulated > 1) {
@@ -205,16 +287,21 @@ export class Monkey {
 
 			this.timeAccumulated -= timeUsed;
 
-			this.findNumbers(timeUsed * Math.pow(2, this.data.level));
+			this.findNumbers(timeUsed * Math.pow(2, this.data.level) * (state.meMonkey.level + 1));
 		}
 	}
 
 	findNumbers(numbers: number) {
+		if (this.isMe) {
+			return;
+		}
+
 		state.numbersChecked += numbers;
 
 		if (state.numbersChecked >= state.nextFibonacciNumber) {
 			playSound(sounds.victory2);
 			state.numbersFound.push(state.nextFibonacciNumber);
+			console.log(state.numbersFound.length);
 			addNumberFound(state.nextFibonacciNumber);
 			state.nextFibonacciNumber = getNextFibonacciNumber();
 			progress.setValue(state.numbersFound.length);

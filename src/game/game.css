@@ -29,7 +29,38 @@
 
 .check-current-number {
 	position: absolute;
-	bottom: 55px;
+	bottom: 70px;
+}
+
+.is-fibonacci {
+	position: absolute;
+	bottom: 110px;
+	font-size: 16px;
+}
+
+.all-monkeys .check-current-number,
+.all-monkeys .is-fibonacci {
+	display: none;
+}
+
+.me-monkey {
+	position: absolute;
+	bottom: 75px;
+	display: none;
+	padding: 6px;
+}
+
+.me-monkey svg {
+	width: 30px;
+	height: 30px;
+}
+
+.all-monkeys .me-monkey {
+	display: flex;
+}
+
+.me-awake .me-monkey {
+	display: none;
 }
 
 .numbers-found * {
@@ -38,9 +69,9 @@
 }
 
 .current {
-	font-size: 50px;
+	font-size: 40px;
 	position: absolute;
-	bottom: 100px;
+	bottom: 150px;
 }
 
 .particle {
