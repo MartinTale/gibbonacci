@@ -324,6 +324,7 @@ export function explode(
 	},
 	amount = 10,
 	duration = 1000,
+	onComplete?: () => void,
 ) {
 	for (let i = 0; i < amount; i++) {
 		let particle: HTMLElement;
@@ -370,6 +371,8 @@ export function explode(
 					particle.remove();
 				},
 			});
+
+			onComplete?.();
 		}, duration / 2);
 
 		mount(gameContainer, particle);

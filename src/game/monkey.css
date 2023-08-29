@@ -31,8 +31,27 @@
 	display: none;
 }
 
-.monkey-container.me.active {
+.monkey-container.me.active,
+.is-end .monkey-container.me {
 	display: flex;
+}
+
+.monkey-container.auto {
+	transform: scale(1.5);
+	display: none;
+}
+
+.monkey-container.auto.active {
+	display: flex;
+}
+
+.monkey-container.auto.active,
+.is-end .monkey-container.auto {
+	display: flex;
+}
+
+.is-end .monkey-container {
+	pointer-events: none;
 }
 
 .active .monkey {
@@ -82,6 +101,10 @@
 	opacity: 1;
 	filter: none;
 	cursor: pointer;
+}
+
+.is-end .cost {
+	opacity: 0;
 }
 
 .level {

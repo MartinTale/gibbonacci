@@ -1,7 +1,7 @@
 const STATE_KEY = "monkey-bonacci";
 export type Path = "sound" | "screen";
 
-const version = "0.0.4";
+const version = "0.0.5";
 
 export const HeroPropType = {
 	ID: 0,
@@ -19,6 +19,8 @@ export type MonkeyData = {
 export type State = {
 	version: string;
 	lastProcessedAt: number;
+	startAt: number;
+	endAt: number | null;
 	sound: boolean | null;
 
 	numbersChecked: number;
@@ -30,11 +32,14 @@ export type State = {
 
 	monkeys: [MonkeyData, MonkeyData, MonkeyData, MonkeyData];
 	meMonkey: MonkeyData;
+	autoMonkey: MonkeyData;
 };
 
 export const emptyState: State = {
 	version,
 	lastProcessedAt: Date.now(),
+	startAt: Date.now(),
+	endAt: null,
 	sound: null,
 
 	numbersChecked: 0,
@@ -51,6 +56,7 @@ export const emptyState: State = {
 		{ awake: false, level: 1 },
 	],
 	meMonkey: { awake: false, level: 0 },
+	autoMonkey: { awake: false, level: 0 },
 };
 
 export let state: State;

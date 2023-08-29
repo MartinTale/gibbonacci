@@ -3,13 +3,20 @@ import { gameContainer } from "..";
 import { createButton } from "../components/button/button";
 import { openModal } from "../components/modal/modal";
 import { ProgressBar } from "../components/progress-bar/progress-bar";
-import { el, mount, setTextContent, svgEl } from "../helpers/dom";
+import { el, externalLinkEl, mount, setTextContent, svgEl } from "../helpers/dom";
 import { abbreviateNumber, getMathSymbolElements, random } from "../helpers/numbers";
 import { easings, explode, tween, tweens } from "../systems/animation";
 import { playSound, sounds } from "../systems/music";
 import { state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
-import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
+import {
+	onBananaResourceChange,
+	onEndChange,
+	onMonkeyChange,
+	onNumberResourceChange,
+	onNumbersFoundChange,
+	onUpgradeChange,
+} from "./events";
 import { Monkey } from "./monkey";
 import { maxNumbers } from "../helpers/colors";
 
@@ -25,6 +32,8 @@ export const bananasResourceAmountElement = el("b");
 export const numbersResourceAmountElement = el("b");
 export const monkeys: Monkey[] = [];
 export let meMonkey: Monkey;
+export let autoMonkey: Monkey;
+export const endTime = el("b");
 
 export function initGame() {
 	const gameNameElement = el("h1.name", "MonkeyBonacci");
@@ -41,7 +50,7 @@ export function initGame() {
 		"Check!",
 		() => {
 			if (state.numbersChecked >= state.nextFibonacciNumber) {
-				playSound(sounds.victory2);
+				playSound(sounds.victory3);
 				state.numbersFound.push(state.nextFibonacciNumber);
 				addNumberFound(state.nextFibonacciNumber);
 				state.nextFibonacciNumber = getNextFibonacciNumber();
@@ -59,7 +68,7 @@ export function initGame() {
 					{
 						x: () => 160,
 						y: () => 550,
-						scale: () => 1,
+						scale: () => 0.25,
 						rotate: () => 0,
 					},
 					{
@@ -77,7 +86,7 @@ export function initGame() {
 					{
 						x: () => 160,
 						y: () => 665,
-						scale: () => 1,
+						scale: () => 0.25,
 						rotate: () => 0,
 					},
 					{
@@ -102,7 +111,8 @@ export function initGame() {
 	checkCurrentNumberButton.classList.add("check-current-number");
 	mount(gameContainer, checkCurrentNumberButton);
 
-	meMonkey = new Monkey(gameContainer, 180, 680, -1, true);
+	meMonkey = new Monkey(gameContainer, 180, 680, -1, "me");
+	autoMonkey = new Monkey(gameContainer, 180, 450, -1, "auto");
 
 	const meMonkeyButton = createButton(
 		svgEl(SVGs.monkey, "var(--color)"),
@@ -135,6 +145,7 @@ export function initGame() {
 	onNumbersFoundChange();
 
 	onMonkeyChange();
+	onUpgradeChange();
 
 	monkeys.push(new Monkey(gameContainer, 40, 600, 0));
 	monkeys.push(new Monkey(gameContainer, 320, 600, 1));
@@ -151,6 +162,24 @@ export function initGame() {
 
 	mount(gameContainer, el("div.resources", [bananasElement, numbersElement]));
 
+	const endGameScreen = el("div.end-game", [
+		el("h1", "That's enought!"),
+		el("p", "You can rest now!"),
+		el("br"),
+		el("p", "You finished the game in"),
+		endTime,
+		el("br"),
+		el("b", "Thanks for playing!"),
+		el("div.extras", [
+			externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
+			externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=monkey-bonacci"),
+			externalLinkEl(svgEl(SVGs.itch), "https://martintale.itch.io/?ref=monkey-bonacci"),
+		]),
+	]);
+	mount(gameContainer, endGameScreen);
+
+	onEndChange();
+
 	processGameState();
 }
 
@@ -160,7 +189,9 @@ function processGameState() {
 
 	Object.values(tweens).forEach((updateTween) => updateTween(newProcessingTime));
 
-	monkeys.forEach((monkey) => monkey.process(secondsPassed));
+	if (state.endAt === null) {
+		monkeys.forEach((monkey) => monkey.process(secondsPassed));
+	}
 
 	state.lastProcessedAt = newProcessingTime;
 	requestAnimationFrame(processGameState);

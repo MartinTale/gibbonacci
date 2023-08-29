@@ -8,6 +8,10 @@
 	transition: all 0.2s ease-in-out;
 }
 
+.is-end * {
+	transition: all 1s ease-in-out;
+}
+
 .game > * {
 	z-index: 1;
 }
@@ -19,6 +23,12 @@
 	font-size: 40px;
 	height: 200px;
 	color: var(--color);
+	z-index: 2;
+}
+
+.is-end .numbers-found {
+	transform: translateY(-500px);
+	opacity: 0;
 }
 
 .name {
@@ -74,6 +84,14 @@
 	bottom: 150px;
 }
 
+.is-end .current {
+	opacity: 0;
+}
+
+.is-end .edge-button.link {
+	opacity: 0;
+}
+
 .particle {
 	position: absolute;
 	width: 40px;
@@ -103,4 +121,49 @@
 
 .resources b {
 	margin: 0;
+}
+
+.is-end .resources {
+	opacity: 0;
+}
+
+.is-end .progress-bar {
+	opacity: 0;
+}
+
+.end-game {
+	opacity: 0;
+	transform: translateY(-500px);
+	flex-direction: column;
+	position: absolute;
+	top: 100px;
+	text-align: center;
+	width: 100%;
+}
+
+.is-end .end-game {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.extras {
+	width: 100%;
+	height: 100px;
+	justify-content: space-evenly;
+	margin-top: 64px;
+}
+
+.extras a {
+	width: 100px;
+	height: 100px;
+}
+
+.end-game p {
+	font-size: 16px;
+	margin-top: 16px;
+}
+
+.extras a svg {
+	width: 80px;
+	height: 80px;
 }

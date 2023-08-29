@@ -4,9 +4,17 @@ import { SVGs } from "../systems/svgs";
 import { MonkeyData, state } from "../systems/state";
 import { easings, explode, tween } from "../systems/animation";
 import { abbreviateNumber, getMathSymbolElements, random, randomNegativeOrPositiveOne } from "../helpers/numbers";
-import { onBananaResourceChange, onMonkeyChange, onNumberResourceChange, onNumbersFoundChange } from "./events";
+import {
+	onBananaResourceChange,
+	onMonkeyChange,
+	onNumberResourceChange,
+	onNumbersFoundChange,
+	onUpgradeChange,
+} from "./events";
 import { playSound, sounds } from "../systems/music";
-import { addNumberFound, currentNumberElement, getNextFibonacciNumber, monkeys } from "./game";
+import { addNumberFound, currentNumberElement, getNextFibonacciNumber, meMonkey, monkeys } from "./game";
+
+const intervals = [10, 7.5, 5, 3.5, 2, 1];
 
 export class Monkey {
 	rootElement: HTMLElement;
@@ -21,29 +29,39 @@ export class Monkey {
 	data: MonkeyData;
 
 	timeAccumulated: number = 0;
+	scaleMultiplier = 1;
 
 	constructor(
 		public parentContainer: HTMLElement,
 		public x: number,
 		public y: number,
 		public index: number,
-		public isMe = false,
+		public type: "me" | "auto" | "other" = "other",
 	) {
 		this.sleepElement = el("div.sleep", svgEl(SVGs["night-sleep"], "var(--color)"));
 		this.levelElement = el("b.level", "1");
-		this.monkeyElement = el("div.monkey", [svgEl(SVGs.monkey, "var(--color)"), this.levelElement]);
+		const monkeySVG = type === "auto" ? svgEl(SVGs.gorilla, "var(--color)") : svgEl(SVGs.monkey, "var(--color)");
+		this.monkeyElement = el("div.monkey", [monkeySVG, this.levelElement]);
 		this.costBananaElement = svgEl(SVGs["banana-bunch"], "var(--color)");
 		this.costNumberElement = svgEl(SVGs.turd, "var(--color)");
 		this.costAmountElement = el("b");
 		this.costElement = el("div.cost", [this.costBananaElement, this.costNumberElement, this.costAmountElement]);
-		this.rootElement = el("div.monkey-container", [this.sleepElement, this.monkeyElement, this.costElement]);
+		this.rootElement = el("div.monkey-container.monkey-" + index, [
+			this.sleepElement,
+			this.monkeyElement,
+			this.costElement,
+		]);
 
 		this.rootElement.style.left = `${x}px`;
 		this.rootElement.style.top = `${y}px`;
 
-		if (isMe) {
+		if (type === "me") {
 			this.rootElement.classList.add("me");
 			this.data = state.meMonkey;
+		} else if (type === "auto") {
+			this.scaleMultiplier = 1.5;
+			this.rootElement.classList.add("auto");
+			this.data = state.autoMonkey;
 		} else {
 			this.data = state.monkeys[index];
 		}
@@ -59,13 +77,21 @@ export class Monkey {
 
 		mount(parentContainer, this.rootElement);
 
-		if (isMe) {
+		if (type === "me") {
 			setTimeout(
 				() => {
 					this.playMonkeyThrowBananaAnimation();
 				},
 				random(0, 1000 / Math.min(5, this.data.level)),
 			);
+		} else if (type === "auto") {
+			setTimeout(
+				() => {
+					this.playMonkeyUpgradeAnimation();
+				},
+				(intervals[this.data.level] ?? intervals[intervals.length - 1]) * 1000,
+			);
+			this.playMonkeyPoopAnimation();
 		} else {
 			setTimeout(
 				() => {
@@ -77,12 +103,15 @@ export class Monkey {
 	}
 
 	renderMonkeyState() {
-		this.rootElement.classList.toggle("active", this.data.awake);
+		this.rootElement.classList.toggle("active", this.data.awake && state.endAt === null);
 	}
 
 	renderMonkeyLevel() {
-		if (this.isMe) {
+		if (this.type === "me") {
 			setTextContent(this.levelElement, "x" + abbreviateNumber(1 + this.data.level));
+		} else if (this.type === "auto") {
+			let interval = intervals[this.data.level] ?? intervals[intervals.length - 1];
+			setTextContent(this.levelElement, interval + "s");
 		} else {
 			setTextContent(
 				this.levelElement,
@@ -92,13 +121,17 @@ export class Monkey {
 	}
 
 	playMonkeyCheckAnimation() {
+		if (state.endAt !== null) {
+			return;
+		}
+
 		if (this.data.awake) {
 			explode(
 				getMathSymbolElements(),
 				{
 					x: () => this.x - 25,
 					y: () => this.y - 25,
-					scale: () => 1,
+					scale: () => 0.25,
 					rotate: () => 0,
 				},
 				{
@@ -121,6 +154,10 @@ export class Monkey {
 	}
 
 	playMonkeyThrowBananaAnimation() {
+		if (state.endAt !== null) {
+			return;
+		}
+
 		const targetLocation = [
 			[-140, -75],
 			[140, -75],
@@ -128,7 +165,7 @@ export class Monkey {
 			[90, -150],
 		][random(0, 3)];
 
-		if (this.data.awake && this.isMe) {
+		if (this.data.awake && this.type === "me") {
 			explode(
 				svgEl(SVGs.banana, "var(--color)"),
 				{
@@ -152,16 +189,118 @@ export class Monkey {
 			() => {
 				this.playMonkeyThrowBananaAnimation();
 			},
-			1000 / (1 + Math.min(5, this.data.level)),
+			1000 / Math.min(5, 1 + this.data.level),
+		);
+	}
+
+	playMonkeyPoopAnimation() {
+		if (state.endAt !== null) {
+			return;
+		}
+
+		if (this.data.awake) {
+			explode(
+				svgEl(SVGs.turd, "var(--color)"),
+				{
+					x: () => this.x - 40,
+					y: () => this.y - 25,
+					scale: () => 0.25,
+					rotate: () => 0,
+				},
+				{
+					x: () => random(-40, -80),
+					y: () => random(-15, 15),
+					scale: () => random(5, 7) / 10,
+					rotate: () => random(-45, 45),
+				},
+				1,
+				1000,
+			);
+		}
+
+		setTimeout(
+			() => {
+				this.playMonkeyPoopAnimation();
+			},
+			1000 / Math.min(5, 1 + this.data.level),
+		);
+	}
+
+	playMonkeyUpgradeAnimation() {
+		if (state.endAt !== null) {
+			return;
+		}
+
+		let index = random(0, 4);
+
+		if (index === 4 && state.bananas <= 10 && state.autoMonkey.level < 5) {
+			index = random(0, 3);
+		}
+
+		const targetLocation = [
+			[-140, 165, 1],
+			[140, 165, 1],
+			[-90, 85, 1],
+			[90, 85, 1],
+			[0, 250, 0],
+		][index];
+
+		if (this.data.awake && this.type === "auto") {
+			explode(
+				targetLocation[2] === 0 ? svgEl(SVGs.banana, "var(--color)") : svgEl(SVGs.turd, "var(--color)"),
+				{
+					x: () => this.x - 25,
+					y: () => this.y - 25,
+					scale: () => 0.25,
+					rotate: () => 0,
+				},
+				{
+					x: () => targetLocation[0],
+					y: () => targetLocation[1],
+					scale: () => random(10, 15) / 10,
+					rotate: () => random(-90, 90),
+				},
+				1,
+				2000,
+				() => {
+					if (index === 4) {
+						meMonkey.buyUpgrade();
+					} else {
+						monkeys[index].buyUpgrade();
+					}
+				},
+			);
+		}
+
+		setTimeout(
+			() => {
+				this.playMonkeyUpgradeAnimation();
+			},
+			(intervals[this.data.level] ?? intervals[intervals.length - 1]) * 1000,
 		);
 	}
 
 	getCost() {
-		if (this.isMe) {
+		if (this.type === "me") {
 			if (this.data.awake === false) {
 				return [0, 0];
 			} else {
-				return [5, 0];
+				if (this.data.level === 0) {
+					return [3, 0];
+				} else {
+					return [5, 0];
+				}
+			}
+		} else if (this.type === "auto") {
+			if (this.data.awake === false) {
+				return [0, 0];
+			} else {
+				const costs = [2, 4, 6, 8, 10];
+				if (this.data.level <= 4) {
+					return [costs[this.data.level], 0];
+				} else {
+					return [0, 0];
+				}
 			}
 		} else {
 			if (this.data.awake === false) {
@@ -178,7 +317,13 @@ export class Monkey {
 		this.costBananaElement.classList.toggle("hidden", cost[1] === 1);
 		this.costNumberElement.classList.toggle("hidden", cost[1] === 0);
 
-		setTextContent(this.costAmountElement, abbreviateNumber(cost[0]));
+		if (cost[0] > 0) {
+			setTextContent(this.costAmountElement, abbreviateNumber(cost[0]));
+		} else {
+			this.costBananaElement.classList.toggle("hidden", true);
+			this.costNumberElement.classList.toggle("hidden", true);
+			setTextContent(this.costAmountElement, "");
+		}
 	}
 
 	renderAffordability() {
@@ -187,6 +332,10 @@ export class Monkey {
 
 	canAfford() {
 		const cost = this.getCost();
+
+		if (cost[0] === 0 && this.data.level > 0) {
+			return false;
+		}
 
 		if (cost[1] === 0) {
 			return state.bananas >= cost[0];
@@ -200,9 +349,13 @@ export class Monkey {
 			return;
 		}
 
-		playSound(sounds.tap);
-
 		const cost = this.getCost();
+
+		if (cost[0] === 0 && this.data.level > 0) {
+			return;
+		}
+
+		playSound(sounds.tap);
 
 		if (cost[1] === 0) {
 			state.bananas -= cost[0];
@@ -226,7 +379,9 @@ export class Monkey {
 
 		this.popUp();
 
-		if (this.isMe) {
+		onUpgradeChange();
+
+		if (this.type === "me") {
 			monkeys.forEach((monkey) => {
 				monkey.renderMonkeyLevel();
 				monkey.popUp();
@@ -239,13 +394,13 @@ export class Monkey {
 			from: {
 				x: 0,
 				y: 0,
-				scale: 1,
+				scale: 1 * this.scaleMultiplier,
 				rotate: 0,
 			},
 			to: {
 				x: 0,
 				y: -10,
-				scale: 1.4,
+				scale: 1.4 * this.scaleMultiplier,
 				rotate: 0,
 			},
 			duration: 200,
@@ -255,13 +410,13 @@ export class Monkey {
 					from: {
 						x: 0,
 						y: -10,
-						scale: 1.4,
+						scale: 1.4 * this.scaleMultiplier,
 						rotate: 0,
 					},
 					to: {
 						x: 0,
 						y: 0,
-						scale: 1,
+						scale: 1 * this.scaleMultiplier,
 						rotate: 0,
 					},
 					duration: 800,
@@ -276,7 +431,7 @@ export class Monkey {
 			return;
 		}
 
-		if (this.isMe) {
+		if (this.type === "me" || this.type === "auto") {
 			return;
 		}
 
@@ -292,16 +447,15 @@ export class Monkey {
 	}
 
 	findNumbers(numbers: number) {
-		if (this.isMe) {
+		if (this.type === "me" || this.type === "auto") {
 			return;
 		}
 
 		state.numbersChecked += numbers;
 
 		if (state.numbersChecked >= state.nextFibonacciNumber) {
-			playSound(sounds.victory2);
+			playSound(sounds.victory3);
 			state.numbersFound.push(state.nextFibonacciNumber);
-			console.log(state.numbersFound.length);
 			addNumberFound(state.nextFibonacciNumber);
 			state.nextFibonacciNumber = getNextFibonacciNumber();
 			onNumbersFoundChange();
@@ -318,7 +472,7 @@ export class Monkey {
 				{
 					x: () => 160,
 					y: () => 600,
-					scale: () => 1,
+					scale: () => 0.25,
 					rotate: () => 0,
 				},
 				{
