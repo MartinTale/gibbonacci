@@ -59,27 +59,7 @@ export function initGame() {
 				state.bananas += 1;
 				onBananaResourceChange();
 
-				explode(
-					[
-						svgEl(SVGs.banana, "var(--color)"),
-						svgEl(SVGs["banana-peeled"], "var(--color)"),
-						svgEl(SVGs["banana-bunch"], "var(--color)"),
-					],
-					{
-						x: () => 160,
-						y: () => 550,
-						scale: () => 0.25,
-						rotate: () => 0,
-					},
-					{
-						x: () => random(-150, 150),
-						y: () => random(-550, 50),
-						scale: () => random(5, 20) / 10,
-						rotate: () => random(-360, 360),
-					},
-					10,
-					2000,
-				);
+				explodeBananas();
 			} else {
 				explode(
 					getMathSymbolElements(),
@@ -163,7 +143,7 @@ export function initGame() {
 	mount(gameContainer, el("div.resources", [bananasElement, numbersElement]));
 
 	const endGameScreen = el("div.end-game", [
-		el("h1", "That's enought!"),
+		el("h1", "That's enough!"),
 		el("p", "You can rest now!"),
 		el("br"),
 		el("p", "You finished the game in"),
@@ -211,6 +191,30 @@ function renderNumbersFound() {
 	});
 
 	updateNumbersFoundStyle();
+}
+
+export function explodeBananas() {
+	explode(
+		[
+			svgEl(SVGs.banana, "var(--color)"),
+			svgEl(SVGs["banana-peeled"], "var(--color)"),
+			svgEl(SVGs["banana-bunch"], "var(--color)"),
+		],
+		{
+			x: () => 160,
+			y: () => 550,
+			scale: () => 0.25,
+			rotate: () => 0,
+		},
+		{
+			x: () => random(-150, 150),
+			y: () => random(-550, -150),
+			scale: () => random(5, 20) / 10,
+			rotate: () => random(-360, 360),
+		},
+		8,
+		2000,
+	);
 }
 
 export function addNumberFound(number: number) {

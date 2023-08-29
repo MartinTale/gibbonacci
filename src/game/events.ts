@@ -78,7 +78,7 @@ export function onEndChange() {
 }
 
 export function onUpgradeChange() {
-	if (state.autoMonkey.awake === false && state.meMonkey.level >= 1) {
+	if (state.autoMonkey.awake === false && state.meMonkey.level >= 2) {
 		openModal(
 			gameContainer,
 			"New Boss!",

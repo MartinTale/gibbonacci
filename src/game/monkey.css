@@ -118,6 +118,14 @@
 	opacity: 1;
 }
 
+.is-end .level {
+	opacity: 0;
+}
+
+.auto .level {
+	top: -8px;
+}
+
 @keyframes wiggle-and-float {
 	0% {
 		transform: rotate(0deg) translateY(0px);

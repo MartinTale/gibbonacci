@@ -12,7 +12,14 @@ import {
 	onUpgradeChange,
 } from "./events";
 import { playSound, sounds } from "../systems/music";
-import { addNumberFound, currentNumberElement, getNextFibonacciNumber, meMonkey, monkeys } from "./game";
+import {
+	addNumberFound,
+	currentNumberElement,
+	explodeBananas,
+	getNextFibonacciNumber,
+	meMonkey,
+	monkeys,
+} from "./game";
 
 const intervals = [10, 7.5, 5, 3.5, 2, 1];
 
@@ -82,7 +89,7 @@ export class Monkey {
 				() => {
 					this.playMonkeyThrowBananaAnimation();
 				},
-				random(0, 1000 / Math.min(5, this.data.level)),
+				random(0, 1000 / Math.min(2, this.data.level)),
 			);
 		} else if (type === "auto") {
 			setTimeout(
@@ -97,13 +104,13 @@ export class Monkey {
 				() => {
 					this.playMonkeyCheckAnimation();
 				},
-				random(0, 1000 / Math.min(5, this.data.level)),
+				random(0, 1000 / Math.min(4, this.data.level)),
 			);
 		}
 	}
 
 	renderMonkeyState() {
-		this.rootElement.classList.toggle("active", this.data.awake && state.endAt === null);
+		this.rootElement.classList.toggle("active", this.data.awake);
 	}
 
 	renderMonkeyLevel() {
@@ -149,7 +156,7 @@ export class Monkey {
 			() => {
 				this.playMonkeyCheckAnimation();
 			},
-			1000 / Math.min(5, this.data.level),
+			1000 / Math.min(4, this.data.level),
 		);
 	}
 
@@ -189,7 +196,7 @@ export class Monkey {
 			() => {
 				this.playMonkeyThrowBananaAnimation();
 			},
-			1000 / Math.min(5, 1 + this.data.level),
+			1000 / Math.min(2, 1 + this.data.level),
 		);
 	}
 
@@ -200,7 +207,7 @@ export class Monkey {
 
 		if (this.data.awake) {
 			explode(
-				svgEl(SVGs.turd, "var(--color)"),
+				svgEl(SVGs.turd, "#ccc"),
 				{
 					x: () => this.x - 40,
 					y: () => this.y - 25,
@@ -222,7 +229,7 @@ export class Monkey {
 			() => {
 				this.playMonkeyPoopAnimation();
 			},
-			1000 / Math.min(5, 1 + this.data.level),
+			1000 / Math.min(4, 1 + this.data.level),
 		);
 	}
 
@@ -287,6 +294,8 @@ export class Monkey {
 			} else {
 				if (this.data.level === 0) {
 					return [3, 0];
+				} else if (this.data.level === 1) {
+					return [4, 0];
 				} else {
 					return [5, 0];
 				}
@@ -463,27 +472,7 @@ export class Monkey {
 			state.bananas += 1;
 			onBananaResourceChange();
 
-			explode(
-				[
-					svgEl(SVGs.banana, "var(--color)"),
-					svgEl(SVGs["banana-peeled"], "var(--color)"),
-					svgEl(SVGs["banana-bunch"], "var(--color)"),
-				],
-				{
-					x: () => 160,
-					y: () => 600,
-					scale: () => 0.25,
-					rotate: () => 0,
-				},
-				{
-					x: () => random(-150, 150),
-					y: () => random(-550, 50),
-					scale: () => random(5, 20) / 10,
-					rotate: () => random(-360, 360),
-				},
-				10,
-				2000,
-			);
+			explodeBananas();
 		}
 
 		setTextContent(currentNumberElement, abbreviateNumber(state.numbersChecked));
