@@ -2,7 +2,7 @@ import "./reset.css";
 import "./defaults.css";
 import { initMusic } from "./systems/music";
 import { el, externalLinkEl, mount, svgEl } from "./helpers/dom";
-import { initState, resetState, state } from "./systems/state";
+import { initState, state } from "./systems/state";
 import { SVGs } from "./systems/svgs";
 import { initFireflies } from "./components/fireflies/fireflies";
 import { EdgeLinkButton, EdgeButton } from "./components/edge-button/edge-button";

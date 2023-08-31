@@ -146,26 +146,9 @@
 	transform: translateY(0);
 }
 
-.extras {
-	width: 100%;
-	height: 100px;
-	justify-content: space-evenly;
-	margin-top: 64px;
-}
-
-.extras a {
-	width: 100px;
-	height: 100px;
-}
-
 .end-game p {
 	font-size: 16px;
 	margin-top: 16px;
-}
-
-.extras a svg {
-	width: 80px;
-	height: 80px;
 }
 
 .social {
