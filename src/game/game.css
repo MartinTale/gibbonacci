@@ -107,6 +107,7 @@
 	align-items: center;
 	width: 100%;
 	gap: 30px;
+	font-size: 30px;
 }
 
 .resources > div {

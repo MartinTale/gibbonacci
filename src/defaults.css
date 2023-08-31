@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap");
+
 :root {
 	--bg: #03182b;
 	--color: #8be9ff;
@@ -13,7 +15,7 @@ body * {
 	justify-content: center;
 	align-items: center;
 	position: relative;
-	font-family: "Comic Sans MS", Times, serif;
+	font-family: "Comic Neue", "Comic Sans MS", Times, serif;
 }
 
 html,
@@ -54,7 +56,7 @@ small {
 
 h1 {
 	margin: 0;
-	font-size: 32px;
+	font-size: 38px;
 	width: 100%;
 	color: #fff;
 }
