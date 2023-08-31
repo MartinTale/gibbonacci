@@ -21,7 +21,7 @@
 
 .modal-container {
 	position: absolute;
-	margin: 32px;
+	/* margin: 32px; */
 	padding: 16px;
 	z-index: 102;
 	background-color: var(--bg);

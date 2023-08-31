@@ -1,7 +1,7 @@
 import "./reset.css";
 import "./defaults.css";
 import { initMusic } from "./systems/music";
-import { mount } from "./helpers/dom";
+import { el, externalLinkEl, mount, svgEl } from "./helpers/dom";
 import { initState, resetState, state } from "./systems/state";
 import { SVGs } from "./systems/svgs";
 import { initFireflies } from "./components/fireflies/fireflies";
@@ -28,8 +28,46 @@ window.addEventListener("DOMContentLoaded", () => {
 
 	initMusic();
 
-	new EdgeLinkButton(bodyElement, SVGs.discord, "#5865F2", 8, -8, "https://discord.gg/kPf8XwNuZT");
-	new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=monkey-bonacci");
+	new EdgeLinkButton(bodyElement, SVGs["banana-bunch"], "#FBAA19", 8, -8, () => {
+		openModal(
+			gameContainer,
+			"History",
+			[
+				// el("b", "History"),
+				el(
+					"p",
+					`Fibonacci sequence first appeared and was popularized in Europe, in 1202 through a book called "The Book of Calculation" by Leonardo of Pisa, also known as Fibonacci.`,
+				),
+				el("br"),
+				el("h2", "Present"),
+				el("br"),
+				el(
+					"p",
+					`You're inspired and try to teach monkeys Fibonacci sequence! Surely, the best way to learn it is to check every number to see if it is a Fibonacci number.`,
+				),
+				el("br"),
+				el("h2", "Enjoy the Game!"),
+				el("br"),
+				el("div.social", [
+					externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=monkey-bonacci"),
+					externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
+					externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=monkey-bonacci"),
+				]),
+			],
+			[
+				{
+					content: "Play",
+					type: "primary",
+					onClickCallback: () => {
+						closeModal();
+					},
+				},
+			],
+			null,
+		);
+	});
+	// new EdgeLinkButton(bodyElement, SVGs.discord, "#5865F2", 8, -8, "https://discord.gg/kPf8XwNuZT");
+	// new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=monkey-bonacci");
 
 	soundToggle = new EdgeButton(bodyElement, SVGs.sound, "sound", 8, 8);
 	soundToggle.renderState(state.sound === true);

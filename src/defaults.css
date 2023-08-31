@@ -52,11 +52,16 @@ small {
 	text-align: right;
 }
 
-h1 {
+h1,
+h2 {
 	margin: 0;
 	font-size: 32px;
 	width: 100%;
 	color: #fff;
+}
+
+h2 {
+	font-size: 24px;
 }
 
 a {
@@ -75,6 +80,7 @@ hr {
 p {
 	margin-bottom: 8px;
 	width: 100%;
+	line-height: 1.2;
 }
 
 b {

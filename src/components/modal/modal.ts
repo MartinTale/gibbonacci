@@ -47,7 +47,7 @@ export function openModal(
 	}
 
 	if (typeof header === "string") {
-		header = el("h1", header);
+		header = el("h2", header);
 	}
 
 	if (typeof content === "string") {

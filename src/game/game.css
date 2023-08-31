@@ -167,3 +167,39 @@
 	width: 80px;
 	height: 80px;
 }
+
+.social {
+	width: 100%;
+	height: 100px;
+	justify-content: space-evenly;
+}
+
+.social a {
+	border: 2px solid #fff;
+	border-radius: 8px;
+	padding: 12px;
+}
+
+.social a:hover {
+	transform: scale(1.1);
+}
+
+.social a:nth-of-type(1) {
+	border-color: #fbaa19;
+	background-color: #452e08;
+}
+
+.social a:nth-of-type(2) {
+	border-color: #5865f2;
+	background-color: #191c44;
+}
+
+.social a:nth-of-type(3) {
+	border-color: #fa5c5c;
+	background-color: #502020;
+}
+
+.social svg {
+	width: 42px;
+	height: 42px;
+}

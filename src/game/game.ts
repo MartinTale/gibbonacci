@@ -153,7 +153,7 @@ export function initGame() {
 		el("div.extras", [
 			externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
 			externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=monkey-bonacci"),
-			externalLinkEl(svgEl(SVGs.itch), "https://martintale.itch.io/?ref=monkey-bonacci"),
+			externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=monkey-bonacci"),
 		]),
 	]);
 	mount(gameContainer, endGameScreen);
