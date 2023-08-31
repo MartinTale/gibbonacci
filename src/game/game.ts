@@ -7,7 +7,7 @@ import { el, externalLinkEl, mount, setTextContent, svgEl } from "../helpers/dom
 import { abbreviateNumber, getMathSymbolElements, random } from "../helpers/numbers";
 import { easings, explode, tween, tweens } from "../systems/animation";
 import { playSound, sounds } from "../systems/music";
-import { state } from "../systems/state";
+import { resetState, state } from "../systems/state";
 import { SVGs } from "../systems/svgs";
 import {
 	onBananaResourceChange,
@@ -145,16 +145,26 @@ export function initGame() {
 	const endGameScreen = el("div.end-game", [
 		el("h1", "That's enough!"),
 		el("p", "You can rest now!"),
-		el("br"),
+		el("p", "..."),
 		el("p", "You finished the game in"),
 		endTime,
 		el("br"),
 		el("b", "Thanks for playing!"),
-		el("div.extras", [
-			externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
+		el("div.social", [
 			externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=monkey-bonacci"),
+			externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
 			externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=monkey-bonacci"),
 		]),
+		el("br"),
+		el("br"),
+		createButton(
+			"Play again!",
+			() => {
+				playSound(sounds.tap);
+				resetState();
+			},
+			"primary",
+		),
 	]);
 	mount(gameContainer, endGameScreen);
 
