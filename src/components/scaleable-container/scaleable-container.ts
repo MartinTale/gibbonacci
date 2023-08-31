@@ -34,10 +34,10 @@ export function createScaleableContainer(
 	}
 
 	const observer = new ResizeObserver((entries: ResizeObserverEntry[]) => {
-		// entries.forEach((entry: ResizeObserverEntry) => {
-		entries.forEach(() => {
-			scaleContainer(container, width, height, window.innerWidth, window.innerHeight, name);
-			// scaleContainer(container, width, height, entry.contentRect.width, entry.contentRect.height, name);
+		entries.forEach((entry: ResizeObserverEntry) => {
+			// entries.forEach(() => {
+			// scaleContainer(container, width, height, window.innerWidth, window.innerHeight, name);
+			scaleContainer(container, width, height, entry.contentRect.width, entry.contentRect.height, name);
 		});
 	});
 
