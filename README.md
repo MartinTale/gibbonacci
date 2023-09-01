@@ -2,17 +2,15 @@
 
 MonkeyBonacci is an idle/incremental game about you getting bunch of monkeys to check numbers for you to find all the numbers that belong to Fibonacci sequence.
 
-# How to Play
-
-Tap buttons and monkeys - it's that simple ;)
-
-## Credits & Acknowledgements
+## Credits
 
 Everything (almost), including art, design, music, sound, and game was created by me - [Martin Tale](https://martintale.com/)
 
 -   Social and GUI icons from respective platforms and https://iconmonstr.com/
 -   Moon, Gorilla and Banana icons by [Delapouite](http://delapouite.com) under CC BY 3.0;
 -   Monkey and Turd icon by [Lorc](http://lorcblog.blogspot.com) under CC BY 3.0;
+
+## Acknowledgements
 
 [Cody Ebberson](https://github.com/codyebberson) for [JS13K Starter 2023](https://github.com/codyebberson/js13k-starter-2023) and just being super helpful!
 
