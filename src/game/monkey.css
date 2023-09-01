@@ -60,6 +60,11 @@
 	animation: wiggle-and-float 1s infinite;
 }
 
+.banana {
+	transform-origin: top right;
+	animation: wiggle 1s infinite alternate-reverse;
+}
+
 .sleep {
 	position: absolute;
 	top: 0;
@@ -141,5 +146,14 @@
 	}
 	100% {
 		transform: rotate(0deg) translateY(0px);
+	}
+}
+
+@keyframes wiggle {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(-30deg);
 	}
 }

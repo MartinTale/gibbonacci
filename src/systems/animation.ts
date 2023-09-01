@@ -344,14 +344,14 @@ export function explode(
 				y: 0,
 				scale: from.scale(),
 				rotate: from.rotate(),
-				opacity: 1,
+				opacity: 0.75,
 			},
 			to: {
 				x: to.x(),
 				y: to.y(),
 				scale: to.scale(),
 				rotate: to.rotate(),
-				opacity: 0.75,
+				opacity: 0.5,
 			},
 			duration,
 			easing: easings.easeOutQuint,
@@ -360,7 +360,7 @@ export function explode(
 		setTimeout(() => {
 			tween(particle, {
 				from: {
-					opacity: 0.75,
+					opacity: 0.5,
 				},
 				to: {
 					opacity: 0,

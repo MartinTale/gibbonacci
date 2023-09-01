@@ -122,6 +122,7 @@ export function initGame() {
 	progress = new ProgressBar(gameContainer, 0, maxNumbers, 0);
 	progress.container.style.position = "absolute";
 	progress.container.style.top = "60px";
+	progress.container.style.display = "none";
 	onNumbersFoundChange();
 
 	onMonkeyChange();
@@ -168,6 +169,38 @@ export function initGame() {
 	]);
 	mount(gameContainer, endGameScreen);
 
+	const monk = el("div.active", el("div.monkey", svgEl(SVGs.monkey, "var(--color)")));
+	monk.style.width = "200px";
+	monk.style.marginTop = "25px";
+	mount(gameContainer, monk);
+
+	const sizes = [
+		{ x: 315, y: 500, scale: [2, 2], type: SVGs["banana-peeled"], rotate: 0 },
+		{ x: -75, y: 350, scale: [-3, 3], type: SVGs["banana-bunch"], rotate: 0 },
+		{ x: 390, y: 350, scale: [3, 3], type: SVGs["banana-bunch"], rotate: 0 },
+		{ x: 0, y: 500, scale: [2, 2], type: SVGs.banana, rotate: 90 },
+	];
+
+	for (let i = 0; i < sizes.length; i += 1) {
+		const banana = el("div.particle", svgEl(sizes[i].type, "var(--color)"));
+		banana.style.position = "absolute";
+		banana.style.opacity = "0.5";
+		banana.style.top = `${sizes[i].y}px`;
+		banana.style.left = `${sizes[i].x}px`;
+		banana.style.transform = `scale(${sizes[i].scale[0]}, ${sizes[i].scale[1]}) rotate(${sizes[i].rotate}deg)`;
+		mount(gameContainer, banana);
+	}
+
+	// setInterval(() => {
+	// 	explodeBananas();
+	// }, 3000);
+
+	// setTimeout(() => {
+	// 	setInterval(() => {
+	// 		explodeBananas2();
+	// 	}, 3000);
+	// }, 1500);
+
 	onEndChange();
 
 	processGameState();
@@ -211,19 +244,43 @@ export function explodeBananas() {
 			svgEl(SVGs["banana-bunch"], "var(--color)"),
 		],
 		{
-			x: () => 160,
-			y: () => 550,
+			x: () => -150,
+			y: () => 700,
 			scale: () => 0.25,
 			rotate: () => 0,
 		},
 		{
-			x: () => random(-150, 150),
-			y: () => random(-550, -150),
+			x: () => random(0, 800),
+			y: () => random(-500, -200),
 			scale: () => random(5, 20) / 10,
 			rotate: () => random(-360, 360),
 		},
-		8,
-		2000,
+		10,
+		3000,
+	);
+}
+
+export function explodeBananas2() {
+	explode(
+		[
+			svgEl(SVGs.banana, "var(--color)"),
+			svgEl(SVGs["banana-peeled"], "var(--color)"),
+			svgEl(SVGs["banana-bunch"], "var(--color)"),
+		],
+		{
+			x: () => 510,
+			y: () => 700,
+			scale: () => 0.25,
+			rotate: () => 0,
+		},
+		{
+			x: () => random(-800, 0),
+			y: () => random(-500, -200),
+			scale: () => random(5, 20) / 10,
+			rotate: () => random(-360, 360),
+		},
+		10,
+		3000,
 	);
 }
 

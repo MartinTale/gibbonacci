@@ -61,6 +61,7 @@ export class Monkey {
 
 		this.rootElement.style.left = `${x}px`;
 		this.rootElement.style.top = `${y}px`;
+		this.rootElement.style.display = "none";
 
 		if (type === "me") {
 			this.rootElement.classList.add("me");
