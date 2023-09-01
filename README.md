@@ -2,6 +2,24 @@
 
 MonkeyBonacci is an idle/incremental game about you getting bunch of monkeys to check numbers for you to find all the numbers that belong to Fibonacci sequence.
 
+## Usage
+
+### Dev server
+
+Start the dev server with hot reload:
+
+```bash
+npm run dev
+```
+
+### Production build
+
+Create a final production build:
+
+```bash
+npm run build
+```
+
 ## Credits
 
 Everything (almost), including art, design, music, sound, and game was created by me - [Martin Tale](https://martintale.com/)
@@ -21,21 +39,3 @@ Everything (almost), including art, design, music, sound, and game was created b
 [Kang Seonghoon](https://mearie.org/) for [Roadroller](https://lifthrasiir.github.io/roadroller/)
 
 [Andrzej Mazur](https://end3r.com/) for organizing js13k
-
-## Usage
-
-### Dev server
-
-Start the dev server with hot reload:
-
-```bash
-npm run dev
-```
-
-### Production build
-
-Create a final production build:
-
-```bash
-npm run build
-```
