@@ -49,9 +49,9 @@ window.addEventListener("DOMContentLoaded", () => {
 				el("h2", "Enjoy the Game!"),
 				el("br"),
 				el("div.social", [
-					externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=monkey-bonacci"),
+					externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=gibbonacci"),
 					externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
-					externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=monkey-bonacci"),
+					externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=gibbonacci"),
 				]),
 			],
 			[
@@ -67,7 +67,7 @@ window.addEventListener("DOMContentLoaded", () => {
 		);
 	});
 	// new EdgeLinkButton(bodyElement, SVGs.discord, "#5865F2", 8, -8, "https://discord.gg/kPf8XwNuZT");
-	// new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=monkey-bonacci");
+	// new EdgeLinkButton(bodyElement, SVGs.coffee, "#FBAA19", 64, -8, "https://ko-fi.com/martintale?ref=gibbonacci");
 
 	soundToggle = new EdgeButton(bodyElement, SVGs.sound, "sound", 8, 8);
 	soundToggle.renderState(state.sound === true);
