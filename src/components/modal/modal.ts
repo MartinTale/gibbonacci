@@ -11,17 +11,20 @@ export function openModal(
 	buttons: Button[] = [],
 	onCloseCallback: (() => void) | null,
 	className = "none",
+	isClosable = true,
 ) {
 	closeModal();
 
 	const modalOverlay = el("div.modal-overlay");
-	modalOverlay.onclick = () => {
-		closeModal();
+	if (isClosable) {
+		modalOverlay.onclick = () => {
+			closeModal();
 
-		if (onCloseCallback != null) {
-			onCloseCallback();
-		}
-	};
+			if (onCloseCallback != null) {
+				onCloseCallback();
+			}
+		};
+	}
 
 	let buttonElements: HTMLElement[] = [];
 	for (let i = 0; i < buttons.length; i += 1) {

@@ -112,6 +112,8 @@ export function initGame() {
 					},
 				],
 				null,
+				undefined,
+				false,
 			);
 		},
 		"primary",

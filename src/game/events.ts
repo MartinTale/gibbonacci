@@ -99,6 +99,8 @@ export function onUpgradeChange() {
 			() => {
 				autoMonkey.buyUpgrade();
 			},
+			undefined,
+			false,
 		);
 	}
 }
