@@ -36,7 +36,7 @@ export let autoMonkey: Monkey;
 export const endTime = el("b");
 
 export function initGame() {
-	const gameNameElement = el("h1.name", "MonkeyBonacci");
+	const gameNameElement = el("h1.name", "Gibbonacci");
 
 	mount(gameContainer, gameNameElement);
 	mount(gameContainer, numbersFoundContainer);
@@ -112,6 +112,8 @@ export function initGame() {
 					},
 				],
 				null,
+				undefined,
+				false,
 			);
 		},
 		"primary",
@@ -151,9 +153,9 @@ export function initGame() {
 		el("br"),
 		el("b", "Thanks for playing!"),
 		el("div.social", [
-			externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=monkey-bonacci"),
+			externalLinkEl(svgEl(SVGs.coffee, "#FBAA19"), "https://ko-fi.com/martintale?ref=gibbonacci"),
 			externalLinkEl(svgEl(SVGs.discord, "#5865F2"), "https://discord.gg/kPf8XwNuZT"),
-			externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=monkey-bonacci"),
+			externalLinkEl(svgEl(SVGs.itch, "#fa5c5c"), "https://martintale.itch.io/?ref=gibbonacci"),
 		]),
 		el("br"),
 		el("br"),
